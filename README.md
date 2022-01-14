@@ -17,5 +17,5 @@ Faculty:- Alin Dobra
               Lokesh Messala, 
               
 ## Stack(technology):-
-            Front end:- React/Angular,
+            Front end:- React
             Back end:- Golang
