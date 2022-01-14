@@ -1,8 +1,8 @@
-## SE-project
+# SE-project
 
 Faculty:- Alin Dobra
 
-# Main theme:-
+## Main theme:-
             It is a website to gain and share knowledge. This website is not limited to any particular technology and we can ask questions and get real answers from people with               firsthand experience.
             
             Elaboration on the project --
@@ -10,12 +10,12 @@ Faculty:- Alin Dobra
                                          
                         
             
-# Team members:-
-              Sairishab (Me),
+## Team members:-
+              Sairishab,
               Harshwardhan Chauhan, 
               Nikhil Annarapu,
               Lokesh Messala, 
               
-# Stack(technology):-
+## Stack(technology):-
             Front end:- React/Angular,
             Back end:- Golang
