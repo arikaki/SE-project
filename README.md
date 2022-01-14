@@ -3,7 +3,7 @@
 Faculty:- Alin Dobra
 
 Main theme:-
-            It is a website to gain and share knowledge. we can aslo ask questions and find answers not limited to any technology.
+            It is a website to gain and share knowledge. This website is not limited to any particular technology and we can ask questions and get real answers from people with               firsthand experience.
                         
             
 Team members:-
