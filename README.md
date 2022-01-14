@@ -3,14 +3,15 @@
 Faculty:- Alin Dobra
 
 Main theme:-
-            Quora
-
+            
+                        
+            
 Team members:-
               Sairishab (Me),
               Harshwardhan Chauhan, 
               Nikhil Annarapu,
               Lokesh Messala, 
               
-Technology:-
+Stack(technology):-
             Front end:- React/Angular,
             Back end:- Golang
