@@ -19,4 +19,4 @@
               
 ## Stack(technology used):-
             Front end:- React
-            Back end:- Golang
+            Back end:- Golang, MongoDB
