@@ -17,6 +17,4 @@
               Nikhil Annarapu,
               Lokesh Messala
               
-## Stack(technology used):-
-            Front end:- React
-            Back end:- Golang, MongoDB
+
