@@ -12,7 +12,7 @@
                         
             
 ## Team members:-
-              Sairishab,
+              Sairishab (arikaki),
               Harshwardhan Chauhan, 
               Nikhil Annarapu,
               Lokesh Messala
