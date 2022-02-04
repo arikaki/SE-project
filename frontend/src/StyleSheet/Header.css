@@ -10,33 +10,35 @@
   }
   
   .left__logo {
-    width: 20%;
+    
+    width: 15%;
   }
   
   .left__logoImage {
     width: 100%;
   }
   
-  .left__Home,
+  .left__Home{
+    margin-left: 2em;
+  }
   .left__notifications {
     display: flex;
     align-items: center;
   }
   
   .left__notifications {
-    margin-left: 0.6em;
+    margin-left: 1em;
   }
   
   .current-location {
     color: #3d27b9;
-    border-bottom: 1px solid #2755b9;
+    ;
   }
   
   .Header__center {
     display: flex;
     align-items: center;
     margin-right: 25%;
-    border: 1px solid lightgray;
   }
   
   .Header__center:hover {
@@ -50,17 +52,18 @@
   .Header__right {
     display: flex;
     align-items: center;
+    margin-right: 0ex;
   }
   
   .right__user,
   .right__Icon,
   .right-btn {
-    margin-right: 1em;
+    margin-right: 2em;
   }
   
   .right-btn {
     border-radius: 999px;
     padding: 0.1em 2em;
-    background-color: #2729b9;
-    color: rgb(255, 255, 255);
+    background-color: rebeccapurple;
+    color: rgb(250, 245, 245);
   }

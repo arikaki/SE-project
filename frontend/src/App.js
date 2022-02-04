@@ -9,8 +9,6 @@ import Question from "./Question";
 // import axios from "axios";
 // import QuestionList from "./Components/QuestionList";
 const App = () => {
-  const [auth_status, setAuthStatus] = useState(false);
-  const [profile, setImage] = useState(null);
 
   // useEffect(() => {
   //   const url = "http://localhost:3000/api/isUserLoggedIn";
@@ -41,9 +39,10 @@ const App = () => {
     //     </Route>
     //   </Switch>
     // </Router>
-    <div>
-      <Header profile={profile} />
-      <Question />
+    <div className="App">
+      
+      <Header/>
+      <Question/>
     </div>
   );
 };
