@@ -7,7 +7,7 @@ import {black } from "@material-ui/core/colors";
 const CustomButton = (props) => {
 return(
     <div>
-        <Button color="secondary">
+        <Button >
             {props.children}
         </Button>
     </div>)
