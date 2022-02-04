@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import "../StyleSheet/QuestionBox.css";
-import axios from "axios";
+// import axios from "axios";
 const QuestionBox = ({ profile, auth_status }) => {
   const [question, setQuestion] = useState("");
 
@@ -11,15 +11,15 @@ const QuestionBox = ({ profile, auth_status }) => {
 
     const url = "http://localhost:5000/api/ask-question";
 
-    try {
-      const response = await axios.post(url, form_data, {
-        withCredentials: true,
-      });
+    // try {
+    //   const response = await axios.post(url, form_data, {
+    //     withCredentials: true,
+    //   });
 
-      alert(response.data.msg);
-    } catch (error) {
-      alert(error.response.data.msg);
-    }
+    //   alert(response.data.msg);
+    // } catch (error) {
+    //   alert(error.response.data.msg);
+    // }
   };
 
   return (

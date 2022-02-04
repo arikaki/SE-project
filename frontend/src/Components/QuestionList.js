@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import ChatIcon from "@material-ui/icons/Chat";
-import axios from "axios";
+// import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import "../StyleSheet/QuestionLIst.css";
 import Pusher from "pusher-js";
@@ -29,14 +29,14 @@ const QuestionList = () => {
   useEffect(() => {
     const url = "http://localhost:5000/api/all-questions";
 
-    axios
-      .get(url, { withCredentials: true })
-      .then((response) => {
-        setQuestions(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    // axios
+    //   .get(url, { withCredentials: true })
+    //   .then((response) => {
+    //     setQuestions(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   });
 
   const Dislike = (ID) => {
@@ -45,14 +45,14 @@ const QuestionList = () => {
     const data = new FormData();
     data.append("id", ID);
 
-    axios
-      .post(url, data, { withCredentials: true })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // axios
+    //   .post(url, data, { withCredentials: true })
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
   const Like = (ID) => {
     const url = "http://localhost:5000/api/likes";
@@ -60,14 +60,14 @@ const QuestionList = () => {
     const data = new FormData();
     data.append("id", ID);
 
-    axios
-      .post(url, data, { withCredentials: true })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // axios
+    //   .post(url, data, { withCredentials: true })
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   return (
