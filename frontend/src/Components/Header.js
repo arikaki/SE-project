@@ -1,11 +1,12 @@
 import React from "react";
 import HomeIcon from "@material-ui/icons/Home";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-
-import LanguageIcon from "@material-ui/icons/Language";
+import CustomButton from "./CustomButton";
 import Avatar from "@material-ui/core/Avatar";
-import SearchIcon from "@material-ui/icons/Search";
+import Search from './Search';
 import Logo from "../images/logo.jpeg";
+import BasicMenu from "./BasicMenu";
+
 import "../StyleSheet/Header.css";
 const Header = ({ profile }) => {
   const location = window.location.href;
@@ -13,16 +14,16 @@ const Header = ({ profile }) => {
   return (
     <div className="Header">
       <div className="Header__left">
-        <div className="left__logo">
-          <img src={Logo} alt="Company Logo" className="left__logoImage" />
-        </div>
+        
         <div
           className={`left__Home ${
             location === "http://localhost:3000/" ? "current-location" : null
           }`}
         >
-          <HomeIcon />
-          <h4>Home</h4>
+          <CustomButton>
+            <HomeIcon />
+            <h4>Home</h4>
+          </CustomButton>
         </div>
         <div
           className={`left__notifications ${
@@ -31,24 +32,25 @@ const Header = ({ profile }) => {
               : null
           }`}
         >
-          <NotificationsIcon />
-          <h4>Notifications</h4>
+          <CustomButton>
+            <NotificationsIcon />
+            <h4>Notifications</h4>
+          </CustomButton>
         </div>
       </div>
+      <div className="left__logo">
+          <img src={Logo} alt="Company Logo" className="left__logoImage" />
+        </div>
       <div className="Header__center">
-        <input
-          type="text"
-          placeholder="Search"
-          className="center__inputField"
-        />
-        <SearchIcon />
+        <Search />
       </div>
       <div className="Header__right">
         <div className="right__user">
-          <Avatar src={profile} alt="User Profile" />
+          <BasicMenu>
+            <Avatar src={profile} alt="User Profile" />
+          </BasicMenu>
         </div>
-        <LanguageIcon className="right__Icon" />
-        <button className="right-btn">Add Question</button>
+        <button className="right-btn">Ask Anything</button>
       </div>
     </div>
   );
