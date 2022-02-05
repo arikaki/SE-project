@@ -2,6 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
+import { red } from '@material-ui/core/colors';
 
 export default function Search() {
   return (
@@ -18,7 +19,8 @@ export default function Search() {
             InputProps={{
               // ...params.InputProps,
               type: 'search',
-              size: 'small'
+              size: 'small',
+             
             }}
           />
         {/* )} */}

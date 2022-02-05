@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Header from "./Components/Header";
-// import QuestionBox from "./Components/QuestionBox";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import SignUp from "./Components/SignUp";
-import SignIn from "./Components/SignIn";
+import QuestionBox from "./Components/QuestionBox";
 import Question from "./Question";
 // import axios from "axios";
-// import QuestionList from "./Components/QuestionList";
+import QuestionList from "./Components/QuestionList";
 const App = () => {
+  const [showAskQuestion, setShowAskQuestion] = useState(false);
+  const onAsk = () => {
+    setShowAskQuestion(true);
+  }
+  const closeQuestion = () => {
+    setShowAskQuestion(false);
+  }
 
   // useEffect(() => {
   //   const url = "http://localhost:3000/api/isUserLoggedIn";
@@ -41,8 +45,11 @@ const App = () => {
     // </Router>
     <div className="App">
       
-      <Header/>
-      <Question/>
+      <Header onAsk={onAsk}/>
+      {showAskQuestion? <div style={{marginTop: "10%"}}>
+        <QuestionBox closeQuestion={closeQuestion}/>
+        <QuestionList />
+      </div>: <Question/>}
     </div>
   );
 };
