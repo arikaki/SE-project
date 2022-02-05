@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '1%',
         marginRight: '10%',
         // borderRadius: '15px',
-        background: '#148DB5',
+        background: '#bbdefb',
         padding: '0px 10px 10px 10px',
     },
     content: {
@@ -51,19 +51,19 @@ export default function QuestionScreen(props) {
                     {props.type === "answer" && <CardHeader
                         avatar={
                             <Avatar sx={{ bgcolor: red[500] }} aria-label="avatar">
-                                R
+                                A
                             </Avatar>
 
 
                         }
-                        subheader="Ricky Jane"
+                        subheader="Alin Dobra"
                     />}
                 </Grid>}
             </Grid>
             <Grid container spacing={2}>
                 < Grid item xs={12} >
                     <CardContent>
-                        <Typography fontSize='h6.fontSize' variant="body2" fontWeight='Bold' color="text.secondary" justifyContent='left' noWrap>
+                        <Typography fontSize='h6.fontSize' variant="body2" fontWeight='light' color="text.secondary" justifyContent='left' noWrap>
                             {props.title}
                         </Typography>
                         {/* <h2>{props.title}</h2> */}

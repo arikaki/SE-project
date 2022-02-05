@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import ChatIcon from "@material-ui/icons/Chat";
-// import axios from "axios";
+import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import "../StyleSheet/QuestionLIst.css";
 import Pusher from "pusher-js";
 
-const QuestionList = () => {
+const QuestionList = (props) => {
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
@@ -26,49 +26,49 @@ const QuestionList = () => {
     };
   }, [questions]);
 
-  useEffect(() => {
-    const url = "http://localhost:5000/api/all-questions";
+  // useEffect(() => {
+  //   const url = "http://localhost:5000/api/all-questions";
 
-    // axios
-    //   .get(url, { withCredentials: true })
-    //   .then((response) => {
-    //     setQuestions(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
-  });
+  //   axios
+  //     .get(url, { withCredentials: true })
+  //     .then((response) => {
+  //       setQuestions(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // });
 
-  const Dislike = (ID) => {
-    const url = "http://localhost:5000/api/dislike";
+  // const Dislike = (ID) => {
+  //   const url = "http://localhost:5000/api/dislike";
 
-    const data = new FormData();
-    data.append("id", ID);
+  //   const data = new FormData();
+  //   data.append("id", ID);
 
-    // axios
-    //   .post(url, data, { withCredentials: true })
-    //   .then((response) => {
-    //     console.log(response);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-  };
-  const Like = (ID) => {
-    const url = "http://localhost:5000/api/likes";
+  //   axios
+  //     .post(url, data, { withCredentials: true })
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+  // const Like = (ID) => {
+  //   const url = "http://localhost:5000/api/likes";
 
-    const data = new FormData();
-    data.append("id", ID);
+  //   const data = new FormData();
+  //   data.append("id", ID);
 
-    // axios
-    //   .post(url, data, { withCredentials: true })
-    //   .then((response) => {
-    //     console.log(response);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-  };
+  //   axios
+  //     .post(url, data, { withCredentials: true })
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   return (
     <div className="QuestionList">
@@ -87,11 +87,11 @@ const QuestionList = () => {
                   </div>
                   <div className="question__stats">
                     <div className="likes" style={{ cursor: "pointer" }}>
-                      <ThumbUpIcon onClick={() => Like(question._id)} />
+                      <ThumbUpIcon/>
                       <h4>{question.upvotes}</h4>
                     </div>
                     <div className="dislikes" style={{ cursor: "pointer" }}>
-                      <ThumbDownIcon onClick={() => Dislike(question._id)} />
+                      <ThumbDownIcon/>
                       <h4>{question.downvotes}</h4>
                     </div>
                     <div className="comments" style={{ cursor: "pointer" }}>

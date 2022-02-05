@@ -24,8 +24,8 @@ const QuestionBox = ({ profile, auth_status }) => {
 
     return (
         <div>
-            <QuestionCard title="Which college should I go to and why: FSU or UF? nbdg" firstCTA="Answer" secondCTA="follow" type="question" />
-            <QuestionCard title="uf is awesome!!!" firstCTA="Comment" secondCTA="share" type="answer" />
+            <QuestionCard title="Which college should I go to and why: FSU or UF?" firstCTA="Answer" secondCTA="follow" type="question" />
+            <QuestionCard title="UF is awesome!!!" firstCTA="Comment" secondCTA="share" type="answer" />
         </div>
     );
 };

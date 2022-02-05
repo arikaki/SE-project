@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
-import "../StyleSheet/QuestionBox.css";
+import "../StyleSheet/QuestionBox.css"; 
+import { Grid } from '@mui/material';
+import { Fab } from "@material-ui/core";
 // import axios from "axios";
-const QuestionBox = ({ profile, auth_status }) => {
+const QuestionBox = (props) => {
   const [question, setQuestion] = useState("");
 
   const AskQuestion = async () => {
@@ -24,10 +26,25 @@ const QuestionBox = ({ profile, auth_status }) => {
 
   return (
     <div className="QuestionBox">
+      {/* <Stack sx={{ width: '100%' }} spacing={2}>
       <div className="QuestionBox__user">
-        <Avatar src={profile} alt="User Profile" />
+        <Avatar alt="User Profile" />
         <h4 className="user__username">Junior</h4>
       </div>
+      <Alert onClose={() => {}}></Alert>
+       </Stack> */}
+      <Grid container spacing={1}>
+        <Grid item xs={11}>
+        <div className="QuestionBox__user">
+        <Avatar alt="User Profile" />
+        <h4 className="user__username">Junior</h4>
+      </div>
+      </Grid>
+      <Grid item xs={1}>
+      {/* <CloseButton /> */}
+      <Fab size='small' onClick={props.closeQuestion}>x</Fab>
+      </Grid>
+      </Grid>
       <div className="QuestionBox__inputField">
         <input
           type="text"
@@ -37,7 +54,7 @@ const QuestionBox = ({ profile, auth_status }) => {
           value={question}
         />
         <button
-          disabled={auth_status === true ? false : true}
+          disabled={false}
           className="QuestionBox__btn"
           onClick={AskQuestion}
         >
