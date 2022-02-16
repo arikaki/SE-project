@@ -28,7 +28,7 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function SignInSide() {
+export default function SignInSide(props: any) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -113,7 +113,7 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link variant="body2" onClick={() => {console.log("setshowsignup");props.setShowSignup(true)}}>
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
