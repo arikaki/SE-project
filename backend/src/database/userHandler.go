@@ -31,6 +31,23 @@ type User struct {
 	Password string `json:"Password"`
 }
 
+func FetchUser(email string) User {
+	var collection = client.Database("KoraDB").Collection("Users")
+	var getResult bson.D
+	err := collection.FindOne(context.TODO(), bson.D{
+		{"email", bson.D{{"$eq", email}}},
+	}).Decode((&getResult))
+	if err != nil {
+		fmt.Println("ERROR", err)
+	}
+	var fetchedUser User
+	json.Marshal(getResult)
+	fmt.Println("ID", getResult)
+	bsonBytes, _ := bson.Marshal(getResult)
+	bson.Unmarshal(bsonBytes, &fetchedUser)
+	return fetchedUser
+}
+
 func InsertUsers(w http.ResponseWriter, r *http.Request) {
 	var post User
 
@@ -62,4 +79,15 @@ func InsertUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Inserted multiple documents: ", insertResult.InsertedID)
+}
+
+func FetchUsers(w http.ResponseWriter, r *http.Request) {
+	body, err := json.Marshal(FetchUser("SR@gmail.com"))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
 }
