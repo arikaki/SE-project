@@ -3,10 +3,15 @@ import "./App.css";
 import Header from "./Components/Header";
 import QuestionBox from "./Components/QuestionBox";
 import Question from "./Question";
-// import axios from "axios";
+import axios from "axios";
 import QuestionList from "./Components/QuestionList";
+import SignUp from "./Components/SignUp";
+import SignInSide from "./Components/SignInSide";
+
 const App = () => {
   const [showAskQuestion, setShowAskQuestion] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const onAsk = () => {
     setShowAskQuestion(true);
   }
@@ -29,28 +34,17 @@ const App = () => {
   // }, []);
 
   return (
-    // <Router className="App">
-    //   <Switch>
-    //     <Route path="/user-signup">
-    //       <SignUp />
-    //     </Route>
-    //     <Route path="/user-signin">
-    //       <SignIn />
-    //     </Route>
-    //     <Route path="/">
-    //       {/* <QuestionBox auth_status={auth_status} profile={profile} />
-    //       <QuestionList /> */}
-    //     </Route>
-    //   </Switch>
-    // </Router>
-    <div className="App">
-      
-      <Header onAsk={onAsk}/>
-      {showAskQuestion? <div style={{marginTop: "10%"}}>
-        <QuestionBox closeQuestion={closeQuestion}/>
-        <QuestionList />
-      </div>: <Question/>}
-    </div>
+      <div className="App">
+        {showSignup ? <SignUp setShowSignup={setShowSignup} /> : !isLoggedIn ? <SignInSide setShowSignup={setShowSignup} /> :
+          <>
+            <Header onAsk={onAsk} />
+
+            {showAskQuestion ? <div style={{ marginTop: "10%" }}>
+              <QuestionBox closeQuestion={closeQuestion} />
+              <QuestionList />
+            </div> : <Question />}
+          </>}
+      </div>
   );
 };
 
