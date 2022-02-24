@@ -52,8 +52,13 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	jsonResponse, err := json.Marshal("Question succesfully added.")
+	if err != nil {
+		return
+	}
 	fmt.Println("Inserted document: ", insertResult.InsertedID)
+	w.Write(jsonResponse)
+
 }
 
 func GetAllQ(w http.ResponseWriter, r *http.Request) {
