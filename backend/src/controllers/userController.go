@@ -25,7 +25,8 @@ var SecretKey = []byte(os.Getenv("Cookie_Key"))
 func UserController(r *mux.Router) {
 	r.HandleFunc("/delete/{id}", database.InsertUsers).Methods("DELETE")
 	r.HandleFunc("/update/{id}", database.InsertUsers).Methods("PUT")
-	r.HandleFunc("/get/{id}", database.InsertUsers).Methods("GET")
+	r.HandleFunc("/get-all-details", database.FetchUsers).Methods("GET")
+	//r.HandleFunc("/fetch-user", database.FetchUsers).Methods("GET")
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
