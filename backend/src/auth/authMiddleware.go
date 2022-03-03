@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"os"
@@ -49,12 +50,15 @@ func Auth(next http.Handler) http.Handler {
 			http.Error(w, "User Not Found", http.StatusForbidden)
 			return
 		}
+		ctxWithUser := context.WithValue(r.Context(), 0, foundUser)
+		rWithUser := r.WithContext(ctxWithUser)
+
 		jsonResponse, err := json.Marshal("Authorised User: " + foundUser.Username)
 		if err != nil {
 			return
 		}
 		//update response
 		w.Write(jsonResponse)
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(w, rWithUser)
 	})
 }

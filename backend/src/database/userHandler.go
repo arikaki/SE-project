@@ -26,7 +26,7 @@ func BsonUser(fullname string, email string, username string, password string, f
 }
 
 type User struct {
-	Name     string `json:"Name"`
+	Fullname string `json:"Fullname"`
 	Email    string `json:"Email"`
 	Username string `json:"UserName"`
 	Password string `json:"Password"`
@@ -59,7 +59,7 @@ func InsertUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	password, _ := bcrypt.GenerateFromPassword([]byte(post.Password), 14)
-	user := BsonUser(post.Name, post.Email, post.Username, string(password), []primitive.ObjectID{}, []primitive.ObjectID{}, []primitive.ObjectID{})
+	user := BsonUser(post.Fullname, post.Email, post.Username, string(password), []primitive.ObjectID{}, []primitive.ObjectID{}, []primitive.ObjectID{})
 
 	var collection = client.Database("KoraDB").Collection("Users")
 	insertResult, err := collection.InsertOne(context.TODO(), user)

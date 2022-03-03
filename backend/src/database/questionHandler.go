@@ -42,6 +42,8 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	user := r.Context().Value(0).(*User)
+	fmt.Println("logged user from middleware", user)
 
 	collection := client.Database("KoraDB").Collection("Questions")
 
