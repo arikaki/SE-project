@@ -96,18 +96,13 @@ func InsertUsers(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Inserted multiple documents: ", insertResult.InsertedID)
 }
-
 func FetchUsers(w http.ResponseWriter, r *http.Request) {
-	body, err := json.Marshal(FetchUser("SR@gmail.com"))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	user := r.Context().Value(0).(*User)
+	jsonUser, _ := json.Marshal(user)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(body)
+	w.Write(jsonUser)
 }
-
 func GetUser(userName string) (*User, error) {
 	var collection = client.Database("KoraDB").Collection("Users")
 	var getResult bson.D
