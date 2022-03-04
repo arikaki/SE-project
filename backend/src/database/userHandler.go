@@ -13,7 +13,7 @@ import (
 )
 
 func BsonUser(fullname string, email string, username string, password string, followers []primitive.ObjectID,
-	following []primitive.ObjectID, topics []primitive.ObjectID) bson.D {
+	following []primitive.ObjectID, topics []string, question []primitive.ObjectID, answer []primitive.ObjectID) bson.D {
 	return bson.D{
 		{"fullname", fullname},
 		{"email", email},
@@ -22,21 +22,48 @@ func BsonUser(fullname string, email string, username string, password string, f
 		{"followers", followers},
 		{"following", following},
 		{"topics", topics},
+		{"question", question},
+		{"answer", answer},
 	}
+}
+func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int) bson.D {
+	return bson.D{
+		{"question", question},
+		{"answer", answer},
+		{"username", username},
+		{"downvotes", downvotes},
+	}
+
+}
+func BsonAnswer(answer string, username string, upvotes int, downvotes int) bson.D {
+	return bson.D{
+		{"answer", answer},
+		{"username", username},
+		{"upvotes", upvotes},
+		{"downvotes", downvotes},
+	}
+
 }
 
 type User struct {
-	Fullname string `json:"Fullname"`
-	Email    string `json:"Email"`
-	Username string `json:"UserName"`
-	Password string `json:"Password"`
+	Fullname  string               `json:"Fullname"`
+	Email     string               `json:"Email"`
+	Username  string               `json:"UserName"`
+	Password  string               `json:"Password"`
+	Topics    []string             `json:"Topics"`
+	Upvotes   int                  `json:"Upvotes"`
+	Downvotes int                  `json:"Downvotes"`
+	Question  []primitive.ObjectID `json:"Questions"`
+	Answer    []primitive.ObjectID `json:"Answer"`
 }
 
-func FetchUser(email string) User {
+type Question []primitive.ObjectID
+
+func FetchUser(username string) User {
 	var collection = client.Database("KoraDB").Collection("Users")
 	var getResult bson.D
 	err := collection.FindOne(context.TODO(), bson.D{
-		{"email", bson.D{{"$eq", email}}},
+		{"username", bson.D{{"$eq", username}}},
 	}).Decode((&getResult))
 	if err != nil {
 		fmt.Println("ERROR", err)
@@ -59,7 +86,7 @@ func InsertUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	password, _ := bcrypt.GenerateFromPassword([]byte(post.Password), 14)
-	user := BsonUser(post.Fullname, post.Email, post.Username, string(password), []primitive.ObjectID{}, []primitive.ObjectID{}, []primitive.ObjectID{})
+	user := BsonUser(post.Fullname, post.Email, post.Username, string(password), []primitive.ObjectID{}, []primitive.ObjectID{}, post.Topics, []primitive.ObjectID{}, []primitive.ObjectID{})
 
 	var collection = client.Database("KoraDB").Collection("Users")
 	insertResult, err := collection.InsertOne(context.TODO(), user)
@@ -80,12 +107,15 @@ func FetchUsers(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 }
+
 func GetUser(userName string) (*User, error) {
 	var collection = client.Database("KoraDB").Collection("Users")
 	var getResult bson.D
+
 	err := collection.FindOne(context.TODO(), bson.D{
 		{"username", bson.D{{"$eq", userName}}},
 	}).Decode((&getResult))
+	fmt.Println(getResult)
 	if err != nil {
 		fmt.Println("ERROR", err)
 		return nil, err
@@ -95,6 +125,37 @@ func GetUser(userName string) (*User, error) {
 	bsonBytes, _ := bson.Marshal(getResult)
 	bson.Unmarshal(bsonBytes, &fetchedUser)
 	return &fetchedUser, nil
+}
+
+func InsertDummyUser(w http.ResponseWriter, r *http.Request) {
+	var collection = client.Database("KoraDB").Collection("Users")
+	insertManyResult, err := collection.InsertMany(context.TODO(), DummyData)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
+}
+
+func InsertDummyQuestion(w http.ResponseWriter, r *http.Request) {
+	var collection = client.Database("KoraDB").Collection("Questions")
+	insertManyResult, err := collection.InsertMany(context.TODO(), DummyQuestion)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
+
+}
+func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
+	var collection = client.Database("KoraDB").Collection("Answers")
+	insertManyResult, err := collection.InsertMany(context.TODO(), DummyAnswer)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
+
 }
 
 // bson.D{
