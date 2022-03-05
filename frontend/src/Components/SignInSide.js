@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 
 function Copyright(props) {
   return (
@@ -36,6 +37,23 @@ export default function SignInSide(props) {
     console.log({
       email: data.get('email'),
       password: data.get('password'),
+    });
+    axios.post('http://localhost:8000/login', {
+      Username: data.get('email'),
+      Password: data.get('password'),
+    }, {
+      "Access-Control-Allow-Origin": "*"
+    })
+    .then(function (response) {
+      if (response.status == 200) {
+        let expiry = new Date();
+        expiry.setDate(expiry.getDate() + 2);
+        document.cookie = `session=${response.headers['x-access-token']}; expires=${expiry.toUTCString()}; path=/login`;
+        props.setIsLoggedIn(true)
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
     });
   };
 

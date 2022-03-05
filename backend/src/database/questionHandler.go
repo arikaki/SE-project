@@ -42,6 +42,8 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	user := r.Context().Value(0).(*User)
+	fmt.Println("logged user from middleware", user)
 
 	collection := client.Database("KoraDB").Collection("Questions")
 
@@ -52,8 +54,13 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	jsonResponse, err := json.Marshal("Question succesfully added.")
+	if err != nil {
+		return
+	}
 	fmt.Println("Inserted document: ", insertResult.InsertedID)
+	w.Write(jsonResponse)
+
 }
 
 func GetAllQ(w http.ResponseWriter, r *http.Request) {
