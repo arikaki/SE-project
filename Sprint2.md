@@ -6,7 +6,7 @@
 We have accomplished in the project according to the issue/stories conveyed (closed stories in sprint_2) 
 #### ISSUE 1 - Added Signin and Signup Page
 #### ISSUE 2 - Added Category page for New Users
-#### ISSUE 3 - Created new collection and dummy data 
+#### ISSUE 3 - Created new collections and dummy data 
 #### ISSUE 4 - Implemented User Session Management 
 #### ISSUE 5 - Implemented Fetch User details for profile page 
 #### ISSUE 6 - Added test cases for frontend
@@ -33,6 +33,11 @@ The below API's are used
 5. API to post dummy users
 6. API to Login
 7. API to Logout
+
+## Added three collections
+
+![image](https://user-images.githubusercontent.com/38340989/156870019-b477427b-c660-4e9a-a335-70b1a70dc5ae.png)
+
 
 ## 1. API to Fetch User Details by username
 The /fetch-user API is used to fetch a particular user by username as requested from the frontend Webpage.
