@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func bsonQuestion(question string, user primitive.ObjectID, upvotes int, downvotes int, is_answered bool, followers []primitive.ObjectID,
@@ -33,6 +35,15 @@ type Post struct {
 	Downvotes  int    `json:"Downvotes"`
 }
 
+func getQuestionCollection() *mongo.Collection {
+	db, dbPresent := os.LookupEnv("DBName")
+	if !dbPresent {
+		db = "KoraDB"
+	}
+	var collection = client.Database(db).Collection("Users")
+	return collection
+}
+
 func AskQ(w http.ResponseWriter, r *http.Request) {
 	var post Post
 
@@ -42,8 +53,10 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	user := r.Context().Value(0).(*User)
+	fmt.Println("logged user from middleware", user)
 
-	collection := client.Database("KoraDB").Collection("Questions")
+	collection := getQuestionCollection()
 
 	questionBson := bsonQuestion(post.Question, primitive.NewObjectID(), post.Upvotes, post.Downvotes, false, []primitive.ObjectID{}, []primitive.ObjectID{},
 		[]primitive.ObjectID{}, []primitive.ObjectID{})
@@ -63,7 +76,7 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 
 func GetAllQ(w http.ResponseWriter, r *http.Request) {
 	var allQuestions []*Post
-	collection := client.Database("KoraDB").Collection("Questions")
+	collection := getQuestionCollection()
 	result, err := collection.Find(context.TODO(), bson.D{{}})
 	if err != nil {
 		log.Fatal(err)

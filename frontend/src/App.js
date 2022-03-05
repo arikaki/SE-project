@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+//import "./StyleSheet/profile.css"
 import Header from "./Components/Header";
 import QuestionBox from "./Components/QuestionBox";
 import Question from "./Question";
@@ -7,6 +8,7 @@ import axios from "axios";
 import QuestionList from "./Components/QuestionList";
 import SignUp from "./Components/SignUp";
 import SignInSide from "./Components/SignInSide";
+import Profile from "./Components/Profile";
 
 const App = () => {
   const [showAskQuestion, setShowAskQuestion] = useState(false);
@@ -35,7 +37,7 @@ const App = () => {
 
   return (
       <div className="App">
-        {showSignup ? <SignUp setShowSignup={setShowSignup} /> : !isLoggedIn ? <SignInSide setShowSignup={setShowSignup} /> :
+        {showSignup ? <SignUp setShowSignup={setShowSignup} /> : !isLoggedIn ? <SignInSide setShowSignup={setShowSignup} setIsLoggedIn={setIsLoggedIn}/> :
           <>
             <Header onAsk={onAsk} />
 
@@ -44,6 +46,9 @@ const App = () => {
               <QuestionList />
             </div> : <Question />}
           </>}
+          <Profile/>
+          
+         
       </div>
   );
 };
