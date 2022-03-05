@@ -37,7 +37,7 @@ const App = () => {
 
   return (
       <div className="App">
-        {showSignup ? <SignUp setShowSignup={setShowSignup} /> : !isLoggedIn ? <SignInSide setShowSignup={setShowSignup} /> :
+        {/* {showSignup ? <SignUp setShowSignup={setShowSignup} /> : !isLoggedIn ? <SignInSide setShowSignup={setShowSignup} /> :
           <>
             <Header onAsk={onAsk} />
 
@@ -45,7 +45,7 @@ const App = () => {
               <QuestionBox closeQuestion={closeQuestion} />
               <QuestionList />
             </div> : <Question />}
-          </>}
+          </>} */}
           <Profile/>
           
          
