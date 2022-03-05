@@ -4,13 +4,13 @@
  
 
 We have accomplished in the project according to the issue/stories conveyed (closed stories in sprint_2) 
-#### ISSUE 1 Added Signin and Signup Page
-#### ISSUE 2 Added Category page for New Users
-#### ISSUE 3 Created new collection and dummy data 
-#### ISSUE 4 Implemented User Session Management 
-#### ISSUE 5 Implemented Fetch User details for profile page 
-#### ISSUE 6 Added test cases for frontend
-#### ISSUE 7 Added test cases for backend
+#### ISSUE 1 - Added Signin and Signup Page
+#### ISSUE 2 - Added Category page for New Users
+#### ISSUE 3 - Created new collection and dummy data 
+#### ISSUE 4 - Implemented User Session Management 
+#### ISSUE 5 - Implemented Fetch User details for profile page 
+#### ISSUE 6 - Added test cases for frontend
+#### ISSUE 7 - Added test cases for backend
 
 
 # Backend Development server
@@ -19,6 +19,9 @@ Run the below commands to start the development server.
 > `cd ../backend`
 
 > `go run main.go `
+
+![image](https://user-images.githubusercontent.com/38340989/156869950-cc8f8cd0-4a3a-49c9-b4bf-9dbcd394a263.png)
+
  
 > # Backend
 API :: 
@@ -30,7 +33,7 @@ The below API's are used
 5. API to post dummy users
 6. API to Login
 7. API to Logout
-## Added test cases for backend
+
 ## 1. API to Fetch User Details by username
 The /fetch-user API is used to fetch a particular user by username as requested from the frontend Webpage.
 
@@ -74,6 +77,8 @@ The /logout is used to logout user.
 ![image](https://user-images.githubusercontent.com/38340989/156869643-428aabc7-8578-48ba-bfea-223a1b4f46db.png)
 
 ### Testcases for backend:
+run `go test`
+
 successfully ran the test cases for backend
 
 ![testcases](https://user-images.githubusercontent.com/38340989/156869740-80115618-a8d2-4f1a-bccf-97ed74fdc4f8.jpeg)
