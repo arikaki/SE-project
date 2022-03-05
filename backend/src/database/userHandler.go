@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -59,8 +61,17 @@ type User struct {
 
 type Question []primitive.ObjectID
 
+func getUserCollection() *mongo.Collection {
+	db, dbPresent := os.LookupEnv("DBName")
+	if !dbPresent {
+		db = "KoraDB"
+	}
+	var collection = client.Database(db).Collection("Users")
+	return collection
+}
+
 func FetchUser(username string) User {
-	var collection = client.Database("KoraDB").Collection("Users")
+	collection := getUserCollection()
 	var getResult bson.D
 	err := collection.FindOne(context.TODO(), bson.D{
 		{"username", bson.D{{"$eq", username}}},
@@ -88,7 +99,7 @@ func InsertUsers(w http.ResponseWriter, r *http.Request) {
 	password, _ := bcrypt.GenerateFromPassword([]byte(post.Password), 14)
 	user := BsonUser(post.Fullname, post.Email, post.Username, string(password), []primitive.ObjectID{}, []primitive.ObjectID{}, post.Topics, []primitive.ObjectID{}, []primitive.ObjectID{})
 
-	var collection = client.Database("KoraDB").Collection("Users")
+	collection := getUserCollection()
 	insertResult, err := collection.InsertOne(context.TODO(), user)
 	if err != nil {
 		log.Fatal(err)
@@ -104,7 +115,7 @@ func FetchUsers(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonUser)
 }
 func GetUser(userName string) (*User, error) {
-	var collection = client.Database("KoraDB").Collection("Users")
+	collection := getUserCollection()
 	var getResult bson.D
 
 	err := collection.FindOne(context.TODO(), bson.D{
@@ -123,7 +134,7 @@ func GetUser(userName string) (*User, error) {
 }
 
 func InsertDummyUser(w http.ResponseWriter, r *http.Request) {
-	var collection = client.Database("KoraDB").Collection("Users")
+	collection := getUserCollection()
 	insertManyResult, err := collection.InsertMany(context.TODO(), DummyData)
 	if err != nil {
 		log.Fatal(err)
@@ -133,7 +144,7 @@ func InsertDummyUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func InsertDummyQuestion(w http.ResponseWriter, r *http.Request) {
-	var collection = client.Database("KoraDB").Collection("Questions")
+	collection := getUserCollection()
 	insertManyResult, err := collection.InsertMany(context.TODO(), DummyQuestion)
 	if err != nil {
 		log.Fatal(err)
@@ -143,7 +154,7 @@ func InsertDummyQuestion(w http.ResponseWriter, r *http.Request) {
 
 }
 func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
-	var collection = client.Database("KoraDB").Collection("Answers")
+	collection := getUserCollection()
 	insertManyResult, err := collection.InsertMany(context.TODO(), DummyAnswer)
 	if err != nil {
 		log.Fatal(err)
