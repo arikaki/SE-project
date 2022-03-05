@@ -26,9 +26,16 @@ func UserController(r *mux.Router) {
 	r.HandleFunc("/delete/{id}", database.InsertUsers).Methods("DELETE")
 	r.HandleFunc("/update/{id}", database.InsertUsers).Methods("PUT")
 	r.HandleFunc("/get-all-details", database.FetchUsers).Methods("GET")
-	//r.HandleFunc("/fetch-user", database.FetchUsers).Methods("GET")
+	r.HandleFunc("/fetch-user", database.FetchUsers).Methods("GET")
+	r.HandleFunc("/dummyanswer", database.InsertDummyAnswer).Methods("GET")
+	r.HandleFunc("/dummyuser", database.InsertDummyUser).Methods("GET")
+	r.HandleFunc("/dummyquestion", database.InsertDummyQuestion).Methods("GET")
 }
 
+// func InsertDummyData(w http.ResponseWriter, r *http.Request) {
+// 	// database.InsertDummyUser()
+// 	database.InsertDummyQuestion()
+// }
 func Login(w http.ResponseWriter, r *http.Request) {
 	var data login
 
@@ -37,8 +44,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	fetchedUser, err := database.GetUser(data.Username)
-
+	fetchedUser, _ := database.GetUser(data.Username)
 	if err := bcrypt.CompareHashAndPassword([]byte(fetchedUser.Password), []byte(data.Password)); err != nil {
 		//err
 	}
