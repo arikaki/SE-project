@@ -1,5 +1,17 @@
+import { Button } from "@material-ui/core";
 import React from "react";
 import  "../StyleSheet/profile.css";
+
+var tab1_Active = true;
+var tab2_Active = false;
+const tab1 = (event) => {
+  tab1_Active = ! tab1_Active
+  tab2_Active = ! tab2_Active
+};
+const tab2 = (event) => {
+  tab1_Active = ! tab1_Active
+  tab2_Active = ! tab2_Active
+};
 
 export default function Profile() {
 
@@ -84,12 +96,10 @@ export default function Profile() {
             </div>
           </div>
         </div>
-        <div className="row gutters-sm">
-          <div className="col-sm-6 mb-3">
-            <div className="card h-100">
-              <div className="card-body">
-                <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2">assignment</i>Project Status</h6>
-                <small>Web Design</small>
+        <ul class="nav">
+  <li class="nav-item">
+    <Button class="nav-link active" aria-current="page" onClick={tab1}>Recent Posts</Button>
+    <small>Web Design</small>
                 <div className="progress mb-3" style={{height: '5px'}}>
                   <div className="progress-bar bg-primary" role="progressbar" style={{width: '80%'}} aria-valuenow={80} aria-valuemin={0} aria-valuemax={100} />
                 </div>
@@ -109,14 +119,11 @@ export default function Profile() {
                 <div className="progress mb-3" style={{height: '5px'}}>
                   <div className="progress-bar bg-primary" role="progressbar" style={{width: '66%'}} aria-valuenow={66} aria-valuemin={0} aria-valuemax={100} />
                 </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-sm-6 mb-3">
-            <div className="card h-100">
-              <div className="card-body">
-                <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2">assignment</i>Project Status</h6>
-                <small>Web Design</small>
+  </li>
+  <li class="nav-item">
+    <Button class="nav-link" onClick={tab2}>Recent Comments</Button>
+    <div>
+    <small>Web Design</small>
                 <div className="progress mb-3" style={{height: '5px'}}>
                   <div className="progress-bar bg-primary" role="progressbar" style={{width: '80%'}} aria-valuenow={80} aria-valuemin={0} aria-valuemax={100} />
                 </div>
@@ -136,10 +143,9 @@ export default function Profile() {
                 <div className="progress mb-3" style={{height: '5px'}}>
                   <div className="progress-bar bg-primary" role="progressbar" style={{width: '66%'}} aria-valuenow={66} aria-valuemin={0} aria-valuemax={100} />
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                </div>
+  </li>
+</ul>
       </div>
     </div>
   </div>
