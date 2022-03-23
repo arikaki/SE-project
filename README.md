@@ -13,12 +13,12 @@
             
 ## Team members:-
 
-| Name                 | Github ID      |
-| -------------        | -------------  |
-| SaiRishab            | arikaki        |
-| Harshwardhan Chauhan | Harshwardhan08 |
-| Lokesh Meesala       | lokim99        |
-| Nikhil Annarapu      | Nikhil1612     |
+| Name                 | Github ID      |          Role                             |
+| -------------        | -------------  | ----------------------------------------- |
+| SaiRishab            | arikaki        |    Frontend                               |
+| Harshwardhan Chauhan | Harshwardhan08 |    Backend                                |
+| Lokesh Meesala       | lokim99        |  Frontend(Sprint1) and backend for rest   |
+| Nikhil Annarapu      | Nikhil1612     |     Frontend                              |
 
               
 ## Stack(technology used):-
