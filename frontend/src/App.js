@@ -6,6 +6,7 @@ import Quora from "./components/Quora";
 import { login, selectUser } from "./feature/userSlice";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import Profile from "./components/Profile";
 
 function App() {
   const user = useSelector(selectUser);
@@ -31,6 +32,7 @@ function App() {
       {/* <h1>This is for testing</h1> */}
       {user ? <Quora /> : <Login />}
     </div>
+    // <Profile />
   );
 }
 
