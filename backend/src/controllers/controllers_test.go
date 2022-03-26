@@ -7,6 +7,8 @@ import (
 	"bytes"
 	"net/http"
 	"net/http/httptest"
+
+	"kora.com/project/src/database"
 )
 
 func checkResponseCode(t *testing.T, expected, actual int) {
@@ -28,6 +30,23 @@ func Test_Login(t *testing.T) {
 	fmt.Println("resp", resp.Body.String())
 
 	if resp.Body.String() != `"Login Successful"` {
+		t.Errorf(`Expected product name to be "Login Successful". Got '%v'`, resp.Body.String())
+	}
+}
+
+func Test_FetchUser(t *testing.T) {
+	var jsonStr = []byte(`{"Username": "SR"}`)
+	req, _ := http.NewRequest("POST", "/fetch-user", bytes.NewReader(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+
+	a := http.HandlerFunc(database.FetchUser)
+	resp := httptest.NewRecorder()
+	a.ServeHTTP(resp, req)
+	checkResponseCode(t, http.StatusOK, resp.Code)
+
+	fmt.Println("resp", resp.Body.String())
+
+	if resp.Body.String() != `{"Fullname":"SaiRishab","Email":"SR@gmail.com","UserName":"SR","Password":"","Topics":[],"Upvotes":0,"Downvotes":0,"Questions":null,"Answer":null}` {
 		t.Errorf(`Expected product name to be "Login Successful". Got '%v'`, resp.Body.String())
 	}
 }
