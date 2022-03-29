@@ -170,6 +170,27 @@ func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
 
 }
+//Delete user from DB
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	collection := getUserCollection()
+	var getResult bson.D
+	project := bson.D{{"password", 0}}
+	opts := options.FindOne().SetProjection(project)
+
+	result, err := collection.FindOne(context.TODO(), bson.D{
+		{"username", bson.D{{"$eq", userName}}},
+	}, opts).Decode((&getResult))
+	result, err := usersC.DeleteOne(ctx, bson.D{"username": userName})
+	if err != nil {
+		fmt.Println("failed to delete the user",err)
+		return nil, err
+	}
+	if result.DeletedCount == 0 {
+		fmt.Println("user not found.")
+		return nil,err
+	}
+	return nil
+}
 
 // bson.D{
 // 	{"fullname", "Harshwardhan"},
