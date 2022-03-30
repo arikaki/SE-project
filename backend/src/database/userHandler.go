@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -170,26 +171,29 @@ func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
 
 }
+
 //Delete user from DB
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	var usename userName
 	collection := getUserCollection()
-	var getResult bson.D
-	project := bson.D{{"password", 0}}
-	opts := options.FindOne().SetProjection(project)
+	// usersC := Collection("users")
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	// var getResult bson.D
+	// project := bson.D{{"password", 0}}
+	// opts := options.FindOne().SetProjection(project)
 
-	result, err := collection.FindOne(context.TODO(), bson.D{
-		{"username", bson.D{{"$eq", userName}}},
-	}, opts).Decode((&getResult))
-	result, err := usersC.DeleteOne(ctx, bson.D{"username": userName})
+	// err := collection.FindOne(context.TODO(), bson.D{
+	// 	{"username", bson.D{{"$eq", userName}}},
+	// }, opts).Decode((&getResult))
+	result, err := collection.DeleteOne(ctx, bson.D{
+		{"username", bson.D{{"$eq", usename}}},
+	})
 	if err != nil {
-		fmt.Println("failed to delete the user",err)
-		return nil, err
+		fmt.Println("failed to delete the user", err)
 	}
 	if result.DeletedCount == 0 {
 		fmt.Println("user not found.")
-		return nil,err
 	}
-	return nil
 }
 
 // bson.D{
