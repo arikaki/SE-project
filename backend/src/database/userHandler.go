@@ -7,10 +7,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -61,6 +63,10 @@ type User struct {
 
 type Question []primitive.ObjectID
 
+type userName struct {
+	Username string `json:"UserName"`
+}
+
 func getUserCollection() *mongo.Collection {
 	db, dbPresent := os.LookupEnv("DBName")
 	if !dbPresent {
@@ -70,21 +76,27 @@ func getUserCollection() *mongo.Collection {
 	return collection
 }
 
-func FetchUser(username string) User {
-	collection := getUserCollection()
-	var getResult bson.D
-	err := collection.FindOne(context.TODO(), bson.D{
-		{"username", bson.D{{"$eq", username}}},
-	}).Decode((&getResult))
+func FetchUser(w http.ResponseWriter, r *http.Request) {
+	var data userName
+	var user *User
+	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
-		fmt.Println("ERROR", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
-	var fetchedUser User
-	json.Marshal(getResult)
-	fmt.Println("ID", getResult)
-	bsonBytes, _ := bson.Marshal(getResult)
-	bson.Unmarshal(bsonBytes, &fetchedUser)
-	return fetchedUser
+	if data.Username == "" {
+		user = r.Context().Value(0).(*User)
+	} else {
+		user, err = GetUser(data.Username)
+		if err != nil {
+			http.Error(w, "User Not Found", http.StatusForbidden)
+			return
+		}
+	}
+	jsonUser, _ := json.Marshal(user)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonUser)
 }
 
 func InsertUsers(w http.ResponseWriter, r *http.Request) {
@@ -107,20 +119,16 @@ func InsertUsers(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Inserted multiple documents: ", insertResult.InsertedID)
 }
-func FetchUsers(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value(0).(*User)
-	jsonUser, _ := json.Marshal(user)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonUser)
-}
+
 func GetUser(userName string) (*User, error) {
 	collection := getUserCollection()
 	var getResult bson.D
+	project := bson.D{{"password", 0}}
+	opts := options.FindOne().SetProjection(project)
 
 	err := collection.FindOne(context.TODO(), bson.D{
 		{"username", bson.D{{"$eq", userName}}},
-	}).Decode((&getResult))
+	}, opts).Decode((&getResult))
 	fmt.Println(getResult)
 	if err != nil {
 		fmt.Println("ERROR", err)
@@ -162,6 +170,30 @@ func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
 
+}
+
+//Delete user from DB
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	var usename userName
+	collection := getUserCollection()
+	// usersC := Collection("users")
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	// var getResult bson.D
+	// project := bson.D{{"password", 0}}
+	// opts := options.FindOne().SetProjection(project)
+
+	// err := collection.FindOne(context.TODO(), bson.D{
+	// 	{"username", bson.D{{"$eq", userName}}},
+	// }, opts).Decode((&getResult))
+	result, err := collection.DeleteOne(ctx, bson.D{
+		{"username", bson.D{{"$eq", usename}}},
+	})
+	if err != nil {
+		fmt.Println("failed to delete the user", err)
+	}
+	if result.DeletedCount == 0 {
+		fmt.Println("user not found.")
+	}
 }
 
 // bson.D{
