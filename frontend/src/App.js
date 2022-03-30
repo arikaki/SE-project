@@ -1,56 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
-//import "./StyleSheet/profile.css"
-import Header from "./Components/Header";
-import QuestionBox from "./Components/QuestionBox";
-import Question from "./Question";
-import axios from "axios";
-import QuestionList from "./Components/QuestionList";
-import SignUp from "./Components/SignUp";
-import SignInSide from "./Components/SignInSide";
-import Profile from "./Components/Profile";
+import Login from "./components/auth/Login";
+import Quora from "./components/Quora";
+import { login, selectUser } from "./feature/userSlice";
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import Profile from "./components/Profile";
 
-const App = () => {
-  const [showAskQuestion, setShowAskQuestion] = useState(false);
-  const [showSignup, setShowSignup] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const onAsk = () => {
-    setShowAskQuestion(true);
-  }
-  const closeQuestion = () => {
-    setShowAskQuestion(false);
-  }
+function App() {
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const url = "http://localhost:3000/api/isUserLoggedIn";
-  //   axios
-  //     .get(url, { withCredentials: true })
-  //     .then((response) => {
-  //       console.log(response);
-  //       setAuthStatus(response.data.auth_status);
-  //       setImage(response.data.profileImage);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
-
+  useEffect(() => {
+    onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        dispatch(
+          login({
+            userName: authUser.displayName,
+            photo: authUser.photoURL,
+            email: authUser.email,
+            uid: authUser.uid,
+          })
+        );
+        console.log("AuthUser", authUser);
+      }
+    });
+  }, [dispatch]);
   return (
-      <div className="App">
-        {showSignup ? <SignUp setShowSignup={setShowSignup} /> : !isLoggedIn ? <SignInSide setShowSignup={setShowSignup} setIsLoggedIn={setIsLoggedIn}/> :
-          <>
-            <Header onAsk={onAsk} />
+    <div className="App">
+      {/* <h1>This is for testing</h1>
+      {user ? <Quora /> : <Login />} */}
+          <Profile />
+    </div>
 
-            {showAskQuestion ? <div style={{ marginTop: "10%" }}>
-              <QuestionBox closeQuestion={closeQuestion} />
-              <QuestionList />
-            </div> : <Question />}
-          </>}
-          <Profile/>
-          
-         
-      </div>
   );
-};
+}
 
 export default App;
