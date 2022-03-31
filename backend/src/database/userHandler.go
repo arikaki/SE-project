@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -30,12 +29,13 @@ func BsonUser(fullname string, email string, username string, password string, f
 		{"answer", answer},
 	}
 }
-func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int) bson.D {
+func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int, upvotes int) bson.D {
 	return bson.D{
 		{"question", question},
 		{"answer", answer},
 		{"username", username},
 		{"downvotes", downvotes},
+		{"upvotes", upvotes},
 	}
 
 }
@@ -174,10 +174,11 @@ func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
 
 //Delete user from DB
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	var usename userName
 	collection := getUserCollection()
+	var user *User
+	user = r.Context().Value(0).(*User)
 	// usersC := Collection("users")
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	//  ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 	// var getResult bson.D
 	// project := bson.D{{"password", 0}}
 	// opts := options.FindOne().SetProjection(project)
@@ -185,9 +186,10 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// err := collection.FindOne(context.TODO(), bson.D{
 	// 	{"username", bson.D{{"$eq", userName}}},
 	// }, opts).Decode((&getResult))
-	result, err := collection.DeleteOne(ctx, bson.D{
-		{"username", bson.D{{"$eq", usename}}},
+	result, err := collection.DeleteOne(r.Context(), bson.D{
+		{"username", bson.D{{"$eq", user.Username}}},
 	})
+	fmt.Println("User is deleted", result)
 	if err != nil {
 		fmt.Println("failed to delete the user", err)
 	}
