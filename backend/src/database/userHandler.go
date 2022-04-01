@@ -29,13 +29,14 @@ func BsonUser(fullname string, email string, username string, password string, f
 		{"answer", answer},
 	}
 }
-func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int, upvotes int) bson.D {
+func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int, upvotes int, topic string) bson.D {
 	return bson.D{
 		{"question", question},
 		{"answer", answer},
 		{"username", username},
 		{"downvotes", downvotes},
 		{"upvotes", upvotes},
+		{"topic", topic},
 	}
 
 }
@@ -74,6 +75,14 @@ func getUserCollection() *mongo.Collection {
 	}
 	var collection = client.Database(db).Collection("Users")
 	return collection
+}
+func getQuesCollection() *mongo.Collection {
+	db, dbPresent := os.LookupEnv("DBName")
+	if !dbPresent {
+		db = "KoraDB"
+	}
+	var QuestionCollection = client.Database(db).Collection("Questions")
+	return QuestionCollection
 }
 
 func FetchUser(w http.ResponseWriter, r *http.Request) {
@@ -196,6 +205,43 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	if result.DeletedCount == 0 {
 		fmt.Println("user not found.")
 	}
+}
+func TopQuestion(w http.ResponseWriter, r *http.Request) {
+	collection := getQuesCollection()
+	// coll := getUserCollection()
+	// var user *User
+	// user = r.Context().Value(0).(*User)
+	// project := bson.D{{"topic", 0}}
+	// opts := options.FindOne().SetProjection(project)
+	topics := [2]string{"Technology", "Sports"}
+	// lent := len(user.Topics)
+	// for i := 0; i < lent; i++ {
+	// 	if user.Topics[i] == options.FindOne() {
+
+	// 	}
+
+	// }
+
+	filter := bson.D{{"topic", bson.D{{"$in", topics}}}}
+	// sort := bson.D{{"upvotes", -1}}
+	projection := bson.D{{"question", 1}, {"_id", 0}, {"topic", 1}}
+	opts := options.Find().SetProjection(projection)
+	var result bson.D
+	cursor, err := collection.Find(context.TODO(), filter, opts)
+	if err != nil {
+		//
+	}
+	for cursor.Next(context.TODO()) {
+		var result bson.D
+		if err1 := cursor.Decode(&result); err1 != nil {
+			log.Fatal(err1)
+		}
+		fmt.Println(result)
+	}
+	jsonUser, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonUser)
 }
 
 // bson.D{
