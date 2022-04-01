@@ -10,7 +10,7 @@ import {
   ExpandMore,
 } from "@material-ui/icons";
 import CloseIcon from "@material-ui/icons/Close";
-import { Avatar, Button, Input } from "@material-ui/core";
+import { Avatar, Input } from "@material-ui/core";
 import "./css/QuoraHeader.css";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
@@ -19,6 +19,16 @@ import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { logout, selectUser } from "../feature/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Form,
+  Button,
+  FormControl,
+} from "react-bootstrap";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import { Link } from "react-router-dom";
 
 function QuoraHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -68,114 +78,246 @@ function QuoraHeader() {
   };
   return (
     <div className="qHeader">
-      <div className="qHeader-content">
-        <div className="qHeader__logo">
-          <img
-            src="https://video-public.canva.com/VAD8lt3jPyI/v/ec7205f25c.gif"
-            alt="logo"
-          />
-        </div>
-        <div className="qHeader__icons">
-          <div className="qHeader__icon">
-            <HomeIcon />
+      <Navbar expand="lg">
+        <Container fluid>
+          <div className="qHeader__logo" style={{ paddingLeft: "20px" }}>
+            <img
+              src="https://video-public.canva.com/VAD8lt3jPyI/v/ec7205f25c.gif"
+              alt="logo"
+            />
           </div>
-          <div className="qHeader__icon">
-            <FeaturedPlayListOutlinedIcon />
-          </div>
-          <div className="qHeader__icon">
-            <AssignmentTurnedInOutlined />
-          </div>
-          <div className="qHeader__icon">
-            <PeopleAltOutlined />
-          </div>
-          <div className="qHeader__icon">
-            <NotificationsOutlined />
-          </div>
-        </div>
-        <div className="qHeader__input">
-          <Search />
-          <input type="text" placeholder="Search questions" />
-        </div>
-        <div className="qHeader__Rem">
-          <span onClick={handleLogout}>
-            <Avatar src={user?.photo} />
-          </span>
+          <Navbar.Toggle aria-controls="navbarScroll" />
+          <Navbar.Collapse id="navbarScroll">
+            <Nav
+              className="mx-auto "
+              style={{ maxHeight: "50px", paddingLeft: "30px" }}
+              navbarScroll
+            >
+              <Nav.Link href="/">
+                <HomeIcon />
+              </Nav.Link>
+              <Nav.Link href="/">
+                <FeaturedPlayListOutlinedIcon />
+              </Nav.Link>
 
-          <Button onClick={() => setIsModalOpen(true)}>Add Question</Button>
-          <Modal
-            open={isModalOpen}
-            closeIcon={Close}
-            onClose={() => setIsModalOpen(false)}
-            closeOnEsc
-            center
-            closeOnOverlayClick={false}
-            styles={{
-              overlay: {
-                height: "auto",
-              },
-            }}
-          >
-            <div className="modal__title">
-              <h5>Add Question</h5>
-              <h5>Share Link</h5>
-            </div>
-            <div className="modal__info">
-              <Avatar src={user?.photo} className="avatar" />
-              <div className="modal__scope">
+              <Nav.Link href="/">
+                <AssignmentTurnedInOutlined />
+              </Nav.Link>
+              <Nav.Link href="/">
                 <PeopleAltOutlined />
-                <p>Public</p>
-                <ExpandMore />
-              </div>
+              </Nav.Link>
+              <Nav.Link href="/">
+                <NotificationsOutlined />
+              </Nav.Link>
+            </Nav>
+
+            <div className="qHeader__input">
+              <Search />
+              <input type="text" placeholder="Search questions" />
             </div>
-            <div className="modal__Field">
-              <Input
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                type=" text"
-                placeholder="Start your question with 'What', 'How', 'Why', etc. "
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
+            <Nav className="me-auto" style={{ paddingLeft: "20px" }}>
+              <NavDropdown title={user?.userName.split(" ")[0]}>
+                <NavDropdown.Item href="/profile">
+                  <Button variant="primary">Profile</Button>
+                </NavDropdown.Item>
+                <NavDropdown.Item href="#action4">
+                  <Button variant="danger" onClick={handleLogout}>
+                    Log Out
+                  </Button>
+                </NavDropdown.Item>
+              </NavDropdown>
+            </Nav>
+            <div className="qHeader__Rem">
+              <Button onClick={() => setIsModalOpen(true)}>Add Question</Button>
+              <Modal
+                open={isModalOpen}
+                closeIcon={Close}
+                onClose={() => setIsModalOpen(false)}
+                closeOnEsc
+                center
+                closeOnOverlayClick={false}
+                styles={{
+                  overlay: {
+                    height: "auto",
+                  },
                 }}
               >
-                <input
-                  type="text"
-                  value={inputUrl}
-                  onChange={(e) => setInputUrl(e.target.value)}
-                  style={{
-                    margin: "5px 0",
-                    border: "1px solid lightgray",
-                    padding: "10px",
-                    outline: "2px solid #000",
-                  }}
-                  placeholder="Optional: inclue a link that gives context"
-                />
-                {inputUrl !== "" && (
-                  <img
-                    style={{
-                      height: "40vh",
-                      objectFit: "contain",
-                    }}
-                    src={inputUrl}
-                    alt="displayimage"
+                <div className="modal__title">
+                  <h5>Add Question</h5>
+                  <h5>Share Link</h5>
+                </div>
+                <div className="modal__info">
+                  <Avatar src={user?.photo} className="avatar" />
+                  <div className="modal__scope">
+                    <PeopleAltOutlined />
+                    <p>Public</p>
+                    <ExpandMore />
+                  </div>
+                </div>
+                <div className="modal__Field">
+                  <Input
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
+                    type=" text"
+                    placeholder="Start your question with 'What', 'How', 'Why', etc. "
                   />
-                )}
-              </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <input
+                      type="text"
+                      value={inputUrl}
+                      onChange={(e) => setInputUrl(e.target.value)}
+                      style={{
+                        margin: "5px 0",
+                        border: "1px solid lightgray",
+                        padding: "10px",
+                        outline: "2px solid #000",
+                      }}
+                      placeholder="Optional: inclue a link that gives context"
+                    />
+                    {inputUrl !== "" && (
+                      <img
+                        style={{
+                          height: "40vh",
+                          objectFit: "contain",
+                        }}
+                        src={inputUrl}
+                        alt="displayimage"
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="modal__buttons">
+                  <button
+                    className="cancle"
+                    onClick={() => setIsModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button onClick={handleSubmit} type="submit" className="add">
+                    Add Question
+                  </button>
+                </div>
+              </Modal>
             </div>
-            <div className="modal__buttons">
-              <button className="cancle" onClick={() => setIsModalOpen(false)}>
-                Cancel
-              </button>
-              <button onClick={handleSubmit} type="submit" className="add">
-                Add Question
-              </button>
-            </div>
-          </Modal>
-        </div>
-      </div>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     </div>
+
+    // <div className="qHeader">
+    //   <div className="qHeader-content">
+    //     <div className="qHeader__logo">
+    //       <img
+    //         src="https://video-public.canva.com/VAD8lt3jPyI/v/ec7205f25c.gif"
+    //         alt="logo"
+    //       />
+    //     </div>
+    //     <div className="qHeader__icons">
+    //       <div className="qHeader__icon">
+    //         <HomeIcon />
+    //       </div>
+    //       <div className="qHeader__icon">
+    //         <FeaturedPlayListOutlinedIcon />
+    //       </div>
+    //       <div className="qHeader__icon">
+    //         <AssignmentTurnedInOutlined />
+    //       </div>
+    //       <div className="qHeader__icon">
+    //         <PeopleAltOutlined />
+    //       </div>
+    //       <div className="qHeader__icon">
+    //         <NotificationsOutlined />
+    //       </div>
+    //     </div>
+    //     <div className="qHeader__input">
+    //       <Search />
+    //       <input type="text" placeholder="Search questions" />
+    //     </div>
+    //     <div className="qHeader__Rem">
+    //       <span onClick={handleLogout}>
+    //         <Avatar src={user?.photo} />
+    //       </span>
+
+    //       <Button onClick={() => setIsModalOpen(true)}>Add Question</Button>
+    //       <Modal
+    //         open={isModalOpen}
+    //         closeIcon={Close}
+    //         onClose={() => setIsModalOpen(false)}
+    //         closeOnEsc
+    //         center
+    //         closeOnOverlayClick={false}
+    //         styles={{
+    //           overlay: {
+    //             height: "auto",
+    //           },
+    //         }}
+    //       >
+    //         <div className="modal__title">
+    //           <h5>Add Question</h5>
+    //           <h5>Share Link</h5>
+    //         </div>
+    //         <div className="modal__info">
+    //           <Avatar src={user?.photo} className="avatar" />
+    //           <div className="modal__scope">
+    //             <PeopleAltOutlined />
+    //             <p>Public</p>
+    //             <ExpandMore />
+    //           </div>
+    //         </div>
+    //         <div className="modal__Field">
+    //           <Input
+    //             value={question}
+    //             onChange={(e) => setQuestion(e.target.value)}
+    //             type=" text"
+    //             placeholder="Start your question with 'What', 'How', 'Why', etc. "
+    //           />
+    //           <div
+    //             style={{
+    //               display: "flex",
+    //               flexDirection: "column",
+    //             }}
+    //           >
+    //             <input
+    //               type="text"
+    //               value={inputUrl}
+    //               onChange={(e) => setInputUrl(e.target.value)}
+    //               style={{
+    //                 margin: "5px 0",
+    //                 border: "1px solid lightgray",
+    //                 padding: "10px",
+    //                 outline: "2px solid #000",
+    //               }}
+    //               placeholder="Optional: inclue a link that gives context"
+    //             />
+    //             {inputUrl !== "" && (
+    //               <img
+    //                 style={{
+    //                   height: "40vh",
+    //                   objectFit: "contain",
+    //                 }}
+    //                 src={inputUrl}
+    //                 alt="displayimage"
+    //               />
+    //             )}
+    //           </div>
+    //         </div>
+    //         <div className="modal__buttons">
+    //           <button className="cancle" onClick={() => setIsModalOpen(false)}>
+    //             Cancel
+    //           </button>
+    //           <button onClick={handleSubmit} type="submit" className="add">
+    //             Add Question
+    //           </button>
+    //         </div>
+    //       </Modal>
+    //     </div>
+    //   </div>
+    // </div>
   );
 }
 
