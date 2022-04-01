@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func bsonQuestion(question string, user primitive.ObjectID, upvotes int, downvotes int, is_answered bool, followers []primitive.ObjectID,
@@ -28,6 +29,10 @@ func bsonQuestion(question string, user primitive.ObjectID, upvotes int, downvot
 	}
 }
 
+type searchPost struct {
+	Search string `json:"Search"`
+}
+
 type Post struct {
 	Question   string `json:"Question"`
 	Isanswered bool   `json:"Isanswered"`
@@ -40,7 +45,7 @@ func getQuestionCollection() *mongo.Collection {
 	if !dbPresent {
 		db = "KoraDB"
 	}
-	var collection = client.Database(db).Collection("Users")
+	var collection = client.Database(db).Collection("Questions")
 	return collection
 }
 
@@ -88,7 +93,6 @@ func GetAllQ(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			// return allQuestions, err
 		}
-		fmt.Println("hbjhn", fetchedQuestion)
 
 		allQuestions = append(allQuestions, &fetchedQuestion)
 	}
@@ -108,4 +112,47 @@ func GetAllQ(w http.ResponseWriter, r *http.Request) {
 	// return tasks, nil
 
 	fmt.Println("Fetched Question", allQuestions)
+}
+
+func FindMatchingQuestions(w http.ResponseWriter, r *http.Request) {
+	var data searchPost
+
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	collection := getQuestionCollection()
+	model := mongo.IndexModel{Keys: bson.D{{"question", "text"}}}
+	name, err := collection.Indexes().CreateOne(context.TODO(), model)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Name of Index Created: " + name)
+	filter := bson.D{{"$text", bson.D{{"$search", data.Search}}}}
+	projection := bson.D{{"question", 1}}
+	opts := options.Find().SetProjection(projection)
+	cursor, err := collection.Find(context.TODO(), filter, opts)
+	var results []bson.D
+	if err != nil {
+		fmt.Println("Finding all documents ERROR:", err)
+		defer cursor.Close(context.TODO())
+	} else {
+		for cursor.Next(context.TODO()) {
+			var result bson.D
+			err := cursor.Decode(&result)
+			if err != nil {
+				fmt.Println("cursor.Next() error:", err)
+				os.Exit(1)
+			} else {
+				results = append(results, result)
+			}
+		}
+	}
+	jsonResponse, err := json.Marshal(results)
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
+
 }

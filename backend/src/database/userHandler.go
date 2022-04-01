@@ -138,7 +138,6 @@ func GetUser(userName string) (*User, error) {
 	err := collection.FindOne(context.TODO(), bson.D{
 		{"username", bson.D{{"$eq", userName}}},
 	}, opts).Decode((&getResult))
-	fmt.Println(getResult)
 	if err != nil {
 		fmt.Println("ERROR", err)
 		return nil, err
@@ -178,7 +177,6 @@ func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
-
 }
 
 //Delete user from DB
