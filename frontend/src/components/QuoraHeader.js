@@ -30,7 +30,7 @@ import {
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { Link } from "react-router-dom";
 
-function QuoraHeader() {
+function QuoraHeader(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputUrl, setInputUrl] = useState("");
   const [question, setQuestion] = useState("");
@@ -63,6 +63,13 @@ function QuoraHeader() {
         });
     }
   };
+  const handleClick = () => {
+    // this.setState({
+    //   searchClicked: true
+    // })
+    // this.props.openSearchModal();
+    props.setShowFade(true)
+  }
 
   const handleLogout = () => {
     if (window.confirm("Are you sure to logout ?")) {
@@ -82,7 +89,7 @@ function QuoraHeader() {
         <Container fluid>
           <div className="qHeader__logo" style={{ paddingLeft: "20px" }}>
             <img
-              src="https://video-public.canva.com/VAD8lt3jPyI/v/ec7205f25c.gif"
+              src="/logo192.png"
               alt="logo"
             />
           </div>
@@ -113,7 +120,7 @@ function QuoraHeader() {
 
             <div className="qHeader__input">
               <Search />
-              <input type="text" placeholder="Search questions" />
+              <input type="text" placeholder="Search questions" onClick={handleClick} />
             </div>
             <Nav className="me-auto" style={{ paddingLeft: "20px" }}>
               <NavDropdown title={user?.userName.split(" ")[0]}>

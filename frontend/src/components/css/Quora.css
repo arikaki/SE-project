@@ -27,3 +27,8 @@
 .react-responsive-modal-overlay {
   background: rgb(0 0 0 / 75%);
 }
+
+.fade-search {
+  opacity: 15%;
+  color: black;
+}
