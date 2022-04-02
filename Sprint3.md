@@ -34,23 +34,23 @@ The below API's are used
 3.Added test cases
 
 ## 1. API to return User Details
-The >`/fetch-user` API is used to fetch user details.
+The `/fetch-user` API is used to fetch user details.
 ![userown](https://user-images.githubusercontent.com/38340989/161362300-59888919-2224-4791-9ceb-fbde2db2dd55.jpeg)
 
 Other user details by passing username.
 ![WhatsApp Image 2022-04-01 at 8 26 40 PM](https://user-images.githubusercontent.com/38340989/161362339-06b74bc7-0ef3-4fba-9cc1-b9ed1ee043a4.jpeg)
 
 ## 2. API for related top question
-The >`/topquestion` API is used to fetch Questions based on the category selected by user.
+The `/topquestion` API is used to fetch Questions based on the category selected by user.
 ![image](https://user-images.githubusercontent.com/38340989/161362416-94580694-30fc-4774-acab-7187fecfca69.png)
 
 
 ## 3. API for deleting user
-The >`/deleteuser` API is used to delete user.
+The `/deleteuser` API is used to delete user.
 
 
 ## 4. Search api for fetching matching questions
-The >`/search` API is used to search and find matching questions.
+The `/search` API is used to search and find matching questions.
 ![search](https://user-images.githubusercontent.com/38340989/161362853-7c976786-34e8-40d6-a716-055898ebffac.jpeg)
 
 ## Added Test cases
