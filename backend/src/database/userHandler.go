@@ -50,13 +50,6 @@ func BsonAnswer(answer string, username string, upvotes int, downvotes int) bson
 
 }
 
-type topQuestion struct {
-	Topics []string `json:"Topics"`
-}
-type selectedQuestionId struct {
-	selectedQuestionId primitive.ObjectID `json:"Selectedquestion"`
-}
-
 type User struct {
 	Fullname  string               `json:"Fullname"`
 	Email     string               `json:"Email"`
@@ -90,15 +83,6 @@ func getQuesCollection() *mongo.Collection {
 	}
 	var QuestionCollection = client.Database(db).Collection("Questions")
 	return QuestionCollection
-}
-
-func getAnsCollection() *mongo.Collection {
-	db, dbPresent := os.LookupEnv("DBName")
-	if !dbPresent {
-		db = "KoraDB"
-	}
-	var AnswerCollection = client.Database(db).Collection("Answers")
-	return AnswerCollection
 }
 
 func FetchUser(w http.ResponseWriter, r *http.Request) {
@@ -198,7 +182,17 @@ func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
 //Delete user from DB
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	collection := getUserCollection()
-	user := r.Context().Value(0).(*User)
+	var user *User
+	user = r.Context().Value(0).(*User)
+	// usersC := Collection("users")
+	//  ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	// var getResult bson.D
+	// project := bson.D{{"password", 0}}
+	// opts := options.FindOne().SetProjection(project)
+
+	// err := collection.FindOne(context.TODO(), bson.D{
+	// 	{"username", bson.D{{"$eq", userName}}},
+	// }, opts).Decode((&getResult))
 	result, err := collection.DeleteOne(r.Context(), bson.D{
 		{"username", bson.D{{"$eq", user.Username}}},
 	})
@@ -212,15 +206,21 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 }
 func TopQuestion(w http.ResponseWriter, r *http.Request) {
 	collection := getQuesCollection()
-	var data topQuestion
+	// coll := getUserCollection()
+	// var user *User
+	// user = r.Context().Value(0).(*User)
+	// project := bson.D{{"topic", 0}}
+	// opts := options.FindOne().SetProjection(project)
+	topics := [2]string{"Technology", "Sports"}
+	// lent := len(user.Topics)
+	// for i := 0; i < lent; i++ {
+	// 	if user.Topics[i] == options.FindOne() {
 
-	err := json.NewDecoder(r.Body).Decode(&data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	// 	}
 
-	filter := bson.D{{"topic", bson.D{{"$in", data.Topics}}}}
+	// }
+
+	filter := bson.D{{"topic", bson.D{{"$in", topics}}}}
 	// sort := bson.D{{"upvotes", -1}}
 	projection := bson.D{{"question", 1}, {"_id", 0}, {"topic", 1}}
 	opts := options.Find().SetProjection(projection)
@@ -230,60 +230,16 @@ func TopQuestion(w http.ResponseWriter, r *http.Request) {
 		//
 	}
 	for cursor.Next(context.TODO()) {
+		var result bson.D
 		if err1 := cursor.Decode(&result); err1 != nil {
 			log.Fatal(err1)
 		}
 		fmt.Println(result)
-		jsonUser, _ := json.Marshal(result)
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonUser)
 	}
-
-}
-
-func SelectedQuestion(w http.ResponseWriter, r *http.Request) {
-	// collection := getAnsCollection()
-	// coll := getQuesCollection()
-	// var data selectedQuestionId
-
-	// err := json.NewDecoder(r.Body).Decode(&data)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
-
-	// // project := bson.D{{"password", 0}}
-	// // opts := options.FindOne().SetProjection(project)
-
-	// // err := collection.FindOne(context.TODO(), bson.D{
-	// // 	{"username", bson.D{{"$eq", userName}}},
-	// // }, opts).Decode((&getResult))
-
-	// filter := bson.D{{"_id", data.selectedQuestionId}}
-	// projection := bson.D{{"answer", 1}}
-	// opts := options.FindOne().SetProjection(projection)
-	// var result bson.D
-	// err1 := coll.FindOne(context.TODO(), filter, opts).Decode(&result)
-
-	// filter := bson.D{{"answer", bson.D{{"$in", answer}}}}
-	// projection := bson.D{{"answer", 1}, {"username", 1}, {"upvotes", 1}, {"downvotes", 1}}
-	// opt := options.Find().SetProjection(projection)
-	// cursor, err := collection.Find(context.TODO(), filter, opt)
-	// if err != nil {
-	// 	//
-	// }
-	// for cursor.Next(context.TODO()) {
-	// 	if err1 := cursor.Decode(&result); err1 != nil {
-	// 		log.Fatal(err1)
-	// 	}
-	// 	fmt.Println(result)
-	// 	jsonUser, _ := json.Marshal(result)
-	// 	w.Header().Set("Content-Type", "application/json")
-	// 	w.WriteHeader(http.StatusOK)
-	// 	w.Write(jsonUser)
-	// }
-
+	jsonUser, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonUser)
 }
 
 // bson.D{
