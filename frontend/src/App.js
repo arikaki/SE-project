@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 import Login from "./components/auth/Login";
@@ -12,6 +12,7 @@ import QuoraHeader from "./components/QuoraHeader";
 
 function App() {
   const user = useSelector(selectUser);
+  const [showFade, setShowFade] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,10 +37,10 @@ function App() {
   } else {
     return (
       <div className="App">
-        <QuoraHeader />
+        <QuoraHeader setShowFade={setShowFade}/>
         <Routes>
           {/* <Route path="/" element={<Login />} /> */}
-          <Route exact path="/" element={<Quora />} />
+          <Route exact path="/" element={<Quora showFade={showFade} setShowFade={setShowFade} />} />
           <Route exact path="/profile" element={<Profile user={user} />} />
         </Routes>
         {/* <Quora /> */}
