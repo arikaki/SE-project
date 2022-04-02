@@ -50,11 +50,8 @@ func BsonAnswer(answer string, username string, upvotes int, downvotes int) bson
 
 }
 
-type topQuestion struct {
-	Topics []string `json:"Topics"`
-}
 type selectedQuestionId struct {
-	selectedQuestionId primitive.ObjectID `json:"Selectedquestion"`
+	selectedQuestionId primitive.ObjectID
 }
 
 type User struct {
@@ -70,6 +67,10 @@ type User struct {
 }
 
 type Question []primitive.ObjectID
+
+type topic struct {
+	topic string `json:"Topic"`
+}
 
 type userName struct {
 	Username string `json:"UserName"`
@@ -91,14 +92,13 @@ func getQuesCollection() *mongo.Collection {
 	var QuestionCollection = client.Database(db).Collection("Questions")
 	return QuestionCollection
 }
-
 func getAnsCollection() *mongo.Collection {
 	db, dbPresent := os.LookupEnv("DBName")
 	if !dbPresent {
 		db = "KoraDB"
 	}
-	var AnswerCollection = client.Database(db).Collection("Answers")
-	return AnswerCollection
+	var AnsCollection = client.Database(db).Collection("Answers")
+	return AnsCollection
 }
 
 func FetchUser(w http.ResponseWriter, r *http.Request) {
@@ -154,7 +154,6 @@ func GetUser(userName string) (*User, error) {
 	err := collection.FindOne(context.TODO(), bson.D{
 		{"username", bson.D{{"$eq", userName}}},
 	}, opts).Decode((&getResult))
-	fmt.Println(getResult)
 	if err != nil {
 		fmt.Println("ERROR", err)
 		return nil, err
@@ -194,13 +193,22 @@ func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
-
 }
 
 //Delete user from DB
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	collection := getUserCollection()
-	user := r.Context().Value(0).(*User)
+	var user *User
+	user = r.Context().Value(0).(*User)
+	// usersC := Collection("users")
+	//  ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	// var getResult bson.D
+	// project := bson.D{{"password", 0}}
+	// opts := options.FindOne().SetProjection(project)
+
+	// err := collection.FindOne(context.TODO(), bson.D{
+	// 	{"username", bson.D{{"$eq", userName}}},
+	// }, opts).Decode((&getResult))
 	result, err := collection.DeleteOne(r.Context(), bson.D{
 		{"username", bson.D{{"$eq", user.Username}}},
 	})
@@ -214,15 +222,19 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 }
 func TopQuestion(w http.ResponseWriter, r *http.Request) {
 	collection := getQuesCollection()
-	var data topQuestion
-
+	var data topic
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	// coll := getUserCollection()
+	// var user *User
+	// user = r.Context().Value(0).(*User)
+	// project := bson.D{{"topic", 0}}
+	// opts := options.FindOne().SetProjection(project)
 
-	filter := bson.D{{"topic", bson.D{{"$in", data.Topics}}}}
+	filter := bson.D{{"topic", bson.D{{"$in", data.topic}}}}
 	// sort := bson.D{{"upvotes", -1}}
 	projection := bson.D{{"question", 1}, {"_id", 0}, {"topic", 1}}
 	opts := options.Find().SetProjection(projection)
@@ -236,10 +248,6 @@ func TopQuestion(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err1)
 		}
 		fmt.Println(result)
-		jsonUser, _ := json.Marshal(result)
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonUser)
 	}
 
 }

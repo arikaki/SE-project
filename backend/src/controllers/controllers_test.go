@@ -47,7 +47,7 @@ func Test_FetchUser(t *testing.T) {
 	fmt.Println("resp", resp.Body.String())
 
 	if resp.Body.String() != `{"Fullname":"SaiRishab","Email":"SR@gmail.com","UserName":"SR","Password":"","Topics":[],"Upvotes":0,"Downvotes":0,"Questions":null,"Answer":null}` {
-		t.Errorf(`Expected product name to be "Login Successful". Got '%v'`, resp.Body.String()
+		t.Errorf(`Expected a string of user details. Got '%v'`, resp.Body.String())
 	}
 }
 
@@ -61,9 +61,24 @@ func Test_DeleteUser(t *testing.T) {
 	checkResponseCode(t, http.StatusOK, resp.Code)
 
 	fmt.Println("resp", resp.Body.String())
+	t.Errorf(`Expected the product name "User is Deleted". Got '%v'`, resp.Body.String())
 
-	if resp.Body.String() != `"User is deleted"` {
-		t.Errorf(`Expected response to be "User is deleted". Got '%v'`, resp.Body.String())
+}
+
+func Test_FindMatchingQuestions(t *testing.T) {
+	var jsonStr = []byte(`{"Search": "why my investment doesn't work"}`)
+	req, _ := http.NewRequest("POST", "/search", bytes.NewReader(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+
+	a := http.HandlerFunc(database.FindMatchingQuestions)
+	resp := httptest.NewRecorder()
+	a.ServeHTTP(resp, req)
+	checkResponseCode(t, http.StatusOK, resp.Code)
+
+	fmt.Println("resp", resp.Body.String())
+
+	if resp.Body.String() != `[[{"Key":"_id","Value":"62217301ecf350ef0c2e0dc6"},{"Key":"question","Value":"What’s a good investment for 2022?"}],[{"Key":"_id","Value":"62475a4bca2bb7bc2c1d960b"},{"Key":"question","Value":"What’s a good investment for long term?"}],[{"Key":"_id","Value":"62475ac0ca2bb7bc2c1d960d"},{"Key":"question","Value":"What’s a good investment to double the money in 14 days?"}]]` {
+		t.Errorf(`Expected list of matching questions. Got '%v'`, resp.Body.String())
 	}
 }
 func Test_TopQuestion(t *testing.T) {
@@ -79,7 +94,7 @@ func Test_TopQuestion(t *testing.T) {
 	fmt.Println("resp", resp.Body.String())
 
 	if resp.Body.String() != `{"question":"How can modern technology help evolve?","question":"What does “absolute refractive index of glass is 1.5” mean?","question":"what is the speed of the bullet train?"}` {
-		t.Errorf(`Expected product name to be "Fetched Successfully". Got '%v'`, resp.Body.String())
+		t.Errorf(`Expected a string of questions. Got '%v'`, resp.Body.String())
 	}
 }
 func Test_SelectedQuestion(t *testing.T) {
@@ -95,7 +110,7 @@ func Test_SelectedQuestion(t *testing.T) {
 	fmt.Println("resp", resp.Body.String())
 
 	if resp.Body.String() != `{"answer":"Technology has helped us to fly, drive, sail,communicate"}` {
-		t.Errorf(`Expected product name to be "Feteched Sucessfully". Got '%v'`, resp.Body.String())
+		t.Errorf(`Expected a string of answers. Got '%v'`, resp.Body.String())
 	}
 }
 
