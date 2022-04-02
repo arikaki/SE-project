@@ -47,7 +47,7 @@ func Test_FetchUser(t *testing.T) {
 	fmt.Println("resp", resp.Body.String())
 
 	if resp.Body.String() != `{"Fullname":"SaiRishab","Email":"SR@gmail.com","UserName":"SR","Password":"","Topics":[],"Upvotes":0,"Downvotes":0,"Questions":null,"Answer":null}` {
-		t.Errorf(`Expected product name to be "Login Successful". Got '%v'`, resp.Body.String())
+		t.Errorf(`Expected product name to be "Login Successful". Got '%v'`, resp.Body.String()
 	}
 }
 
@@ -79,7 +79,7 @@ func Test_TopQuestion(t *testing.T) {
 	fmt.Println("resp", resp.Body.String())
 
 	if resp.Body.String() != `{"question":"How can modern technology help evolve?","question":"What does “absolute refractive index of glass is 1.5” mean?","question":"what is the speed of the bullet train?"}` {
-		t.Errorf(`Expected product name to be "Login Successful". Got '%v'`, resp.Body.String())
+		t.Errorf(`Expected product name to be "Fetched Successfully". Got '%v'`, resp.Body.String())
 	}
 }
 func Test_SelectedQuestion(t *testing.T) {

@@ -245,46 +245,46 @@ func TopQuestion(w http.ResponseWriter, r *http.Request) {
 }
 
 func SelectedQuestion(w http.ResponseWriter, r *http.Request) {
-	// collection := getAnsCollection()
-	// coll := getQuesCollection()
-	// var data selectedQuestionId
+	collection := getAnsCollection()
+	coll := getQuesCollection()
+	var data selectedQuestionId
 
-	// err := json.NewDecoder(r.Body).Decode(&data)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
-	// // project := bson.D{{"password", 0}}
-	// // opts := options.FindOne().SetProjection(project)
+	// project := bson.D{{"password", 0}}
+	// opts := options.FindOne().SetProjection(project)
 
-	// // err := collection.FindOne(context.TODO(), bson.D{
-	// // 	{"username", bson.D{{"$eq", userName}}},
-	// // }, opts).Decode((&getResult))
+	// err := collection.FindOne(context.TODO(), bson.D{
+	// 	{"username", bson.D{{"$eq", userName}}},
+	// }, opts).Decode((&getResult))
 
-	// filter := bson.D{{"_id", data.selectedQuestionId}}
-	// projection := bson.D{{"answer", 1}}
-	// opts := options.FindOne().SetProjection(projection)
-	// var result bson.D
-	// err1 := coll.FindOne(context.TODO(), filter, opts).Decode(&result)
+	filter := bson.D{{"_id", data.selectedQuestionId}}
+	projection := bson.D{{"answer", 1}}
+	opts := options.FindOne().SetProjection(projection)
+	var result bson.D
+	err1 := coll.FindOne(context.TODO(), filter, opts).Decode(&result)
 
-	// filter := bson.D{{"answer", bson.D{{"$in", answer}}}}
-	// projection := bson.D{{"answer", 1}, {"username", 1}, {"upvotes", 1}, {"downvotes", 1}}
-	// opt := options.Find().SetProjection(projection)
-	// cursor, err := collection.Find(context.TODO(), filter, opt)
-	// if err != nil {
-	// 	//
-	// }
-	// for cursor.Next(context.TODO()) {
-	// 	if err1 := cursor.Decode(&result); err1 != nil {
-	// 		log.Fatal(err1)
-	// 	}
-	// 	fmt.Println(result)
-	// 	jsonUser, _ := json.Marshal(result)
-	// 	w.Header().Set("Content-Type", "application/json")
-	// 	w.WriteHeader(http.StatusOK)
-	// 	w.Write(jsonUser)
-	// }
+	filter := bson.D{{"answer", bson.D{{"$in", answer}}}}
+	projection := bson.D{{"answer", 1}, {"username", 1}, {"upvotes", 1}, {"downvotes", 1}}
+	opt := options.Find().SetProjection(projection)
+	cursor, err := collection.Find(context.TODO(), filter, opt)
+	if err != nil {
+		//
+	}
+	for cursor.Next(context.TODO()) {
+		if err1 := cursor.Decode(&result); err1 != nil {
+			log.Fatal(err1)
+		}
+		fmt.Println(result)
+		jsonUser, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsonUser)
+	}
 
 }
 
