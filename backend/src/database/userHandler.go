@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -28,12 +29,14 @@ func BsonUser(fullname string, email string, username string, password string, f
 		{"answer", answer},
 	}
 }
-func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int) bson.D {
+func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int, upvotes int, topic string) bson.D {
 	return bson.D{
 		{"question", question},
 		{"answer", answer},
 		{"username", username},
 		{"downvotes", downvotes},
+		{"upvotes", upvotes},
+		{"topic", topic},
 	}
 
 }
@@ -45,6 +48,10 @@ func BsonAnswer(answer string, username string, upvotes int, downvotes int) bson
 		{"downvotes", downvotes},
 	}
 
+}
+
+type selectedQuestionId struct {
+	selectedQuestionId primitive.ObjectID
 }
 
 type User struct {
@@ -61,6 +68,14 @@ type User struct {
 
 type Question []primitive.ObjectID
 
+type topic struct {
+	topic string `json:"Topic"`
+}
+
+type userName struct {
+	Username string `json:"UserName"`
+}
+
 func getUserCollection() *mongo.Collection {
 	db, dbPresent := os.LookupEnv("DBName")
 	if !dbPresent {
@@ -69,22 +84,44 @@ func getUserCollection() *mongo.Collection {
 	var collection = client.Database(db).Collection("Users")
 	return collection
 }
-
-func FetchUser(username string) User {
-	collection := getUserCollection()
-	var getResult bson.D
-	err := collection.FindOne(context.TODO(), bson.D{
-		{"username", bson.D{{"$eq", username}}},
-	}).Decode((&getResult))
-	if err != nil {
-		fmt.Println("ERROR", err)
+func getQuesCollection() *mongo.Collection {
+	db, dbPresent := os.LookupEnv("DBName")
+	if !dbPresent {
+		db = "KoraDB"
 	}
-	var fetchedUser User
-	json.Marshal(getResult)
-	fmt.Println("ID", getResult)
-	bsonBytes, _ := bson.Marshal(getResult)
-	bson.Unmarshal(bsonBytes, &fetchedUser)
-	return fetchedUser
+	var QuestionCollection = client.Database(db).Collection("Questions")
+	return QuestionCollection
+}
+func getAnsCollection() *mongo.Collection {
+	db, dbPresent := os.LookupEnv("DBName")
+	if !dbPresent {
+		db = "KoraDB"
+	}
+	var AnsCollection = client.Database(db).Collection("Answers")
+	return AnsCollection
+}
+
+func FetchUser(w http.ResponseWriter, r *http.Request) {
+	var data userName
+	var user *User
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if data.Username == "" {
+		user = r.Context().Value(0).(*User)
+	} else {
+		user, err = GetUser(data.Username)
+		if err != nil {
+			http.Error(w, "User Not Found", http.StatusForbidden)
+			return
+		}
+	}
+	jsonUser, _ := json.Marshal(user)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonUser)
 }
 
 func InsertUsers(w http.ResponseWriter, r *http.Request) {
@@ -107,21 +144,16 @@ func InsertUsers(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Inserted multiple documents: ", insertResult.InsertedID)
 }
-func FetchUsers(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value(0).(*User)
-	jsonUser, _ := json.Marshal(user)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonUser)
-}
+
 func GetUser(userName string) (*User, error) {
 	collection := getUserCollection()
 	var getResult bson.D
+	project := bson.D{{"password", 0}}
+	opts := options.FindOne().SetProjection(project)
 
 	err := collection.FindOne(context.TODO(), bson.D{
 		{"username", bson.D{{"$eq", userName}}},
-	}).Decode((&getResult))
-	fmt.Println(getResult)
+	}, opts).Decode((&getResult))
 	if err != nil {
 		fmt.Println("ERROR", err)
 		return nil, err
@@ -161,6 +193,106 @@ func InsertDummyAnswer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
+}
+
+//Delete user from DB
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	collection := getUserCollection()
+	var user *User
+	user = r.Context().Value(0).(*User)
+	// usersC := Collection("users")
+	//  ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	// var getResult bson.D
+	// project := bson.D{{"password", 0}}
+	// opts := options.FindOne().SetProjection(project)
+
+	// err := collection.FindOne(context.TODO(), bson.D{
+	// 	{"username", bson.D{{"$eq", userName}}},
+	// }, opts).Decode((&getResult))
+	result, err := collection.DeleteOne(r.Context(), bson.D{
+		{"username", bson.D{{"$eq", user.Username}}},
+	})
+	fmt.Println("User is deleted", result)
+	if err != nil {
+		fmt.Println("failed to delete the user", err)
+	}
+	if result.DeletedCount == 0 {
+		fmt.Println("user not found.")
+	}
+}
+func TopQuestion(w http.ResponseWriter, r *http.Request) {
+	collection := getQuesCollection()
+	var data topic
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	// coll := getUserCollection()
+	// var user *User
+	// user = r.Context().Value(0).(*User)
+	// project := bson.D{{"topic", 0}}
+	// opts := options.FindOne().SetProjection(project)
+
+	filter := bson.D{{"topic", bson.D{{"$in", data.topic}}}}
+	// sort := bson.D{{"upvotes", -1}}
+	projection := bson.D{{"question", 1}, {"_id", 0}, {"topic", 1}}
+	opts := options.Find().SetProjection(projection)
+	var result bson.D
+	cursor, err := collection.Find(context.TODO(), filter, opts)
+	if err != nil {
+		//
+	}
+	for cursor.Next(context.TODO()) {
+		if err1 := cursor.Decode(&result); err1 != nil {
+			log.Fatal(err1)
+		}
+		fmt.Println(result)
+	}
+
+}
+
+func SelectedQuestion(w http.ResponseWriter, r *http.Request) {
+	collection := getAnsCollection()
+	coll := getQuesCollection()
+	var data selectedQuestionId
+
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// project := bson.D{{"password", 0}}
+	// opts := options.FindOne().SetProjection(project)
+
+	// err := collection.FindOne(context.TODO(), bson.D{
+	// 	{"username", bson.D{{"$eq", userName}}},
+	// }, opts).Decode((&getResult))
+
+	filter := bson.D{{"_id", data.selectedQuestionId}}
+	projection := bson.D{{"answer", 1}}
+	opts := options.FindOne().SetProjection(projection)
+	var result bson.D
+	err1 := coll.FindOne(context.TODO(), filter, opts).Decode(&result)
+
+	filter := bson.D{{"answer", bson.D{{"$in", answer}}}}
+	projection := bson.D{{"answer", 1}, {"username", 1}, {"upvotes", 1}, {"downvotes", 1}}
+	opt := options.Find().SetProjection(projection)
+	cursor, err := collection.Find(context.TODO(), filter, opt)
+	if err != nil {
+		//
+	}
+	for cursor.Next(context.TODO()) {
+		if err1 := cursor.Decode(&result); err1 != nil {
+			log.Fatal(err1)
+		}
+		fmt.Println(result)
+		jsonUser, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsonUser)
+	}
 
 }
 

@@ -1,56 +1,53 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
-//import "./StyleSheet/profile.css"
-import Header from "./Components/Header";
-import QuestionBox from "./Components/QuestionBox";
-import Question from "./Question";
-import axios from "axios";
-import QuestionList from "./Components/QuestionList";
-import SignUp from "./Components/SignUp";
-import SignInSide from "./Components/SignInSide";
-import Profile from "./Components/Profile";
+import Login from "./components/auth/Login";
+import Quora from "./components/Quora";
+import { login, selectUser } from "./feature/userSlice";
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import Profile from "./components/Profile";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import QuoraHeader from "./components/QuoraHeader";
 
-const App = () => {
-  const [showAskQuestion, setShowAskQuestion] = useState(false);
-  const [showSignup, setShowSignup] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const onAsk = () => {
-    setShowAskQuestion(true);
-  }
-  const closeQuestion = () => {
-    setShowAskQuestion(false);
-  }
+function App() {
+  const user = useSelector(selectUser);
+  const [showFade, setShowFade] = useState(false);
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const url = "http://localhost:3000/api/isUserLoggedIn";
-  //   axios
-  //     .get(url, { withCredentials: true })
-  //     .then((response) => {
-  //       console.log(response);
-  //       setAuthStatus(response.data.auth_status);
-  //       setImage(response.data.profileImage);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        dispatch(
+          login({
+            userName: authUser.displayName,
+            photo: authUser.photoURL,
+            email: authUser.email,
+            uid: authUser.uid,
+          })
+        );
+        console.log("AuthUser", authUser);
+      }
+    });
+  }, [dispatch]);
+  // console.log(user);
 
-  return (
+  if (!user) {
+    return <Login />;
+  } else {
+    return (
       <div className="App">
-        {showSignup ? <SignUp setShowSignup={setShowSignup} /> : !isLoggedIn ? <SignInSide setShowSignup={setShowSignup} setIsLoggedIn={setIsLoggedIn}/> :
-          <>
-            <Header onAsk={onAsk} />
-
-            {showAskQuestion ? <div style={{ marginTop: "10%" }}>
-              <QuestionBox closeQuestion={closeQuestion} />
-              <QuestionList />
-            </div> : <Question />}
-          </>}
-          <Profile/>
-          
-         
+        <QuoraHeader setShowFade={setShowFade}/>
+        <Routes>
+          {/* <Route path="/" element={<Login />} /> */}
+          <Route exact path="/" element={<Quora showFade={showFade} setShowFade={setShowFade} />} />
+          <Route exact path="/profile" element={<Profile user={user} />} />
+        </Routes>
+        {/* <Quora /> */}
+        {/* <Profile /> */}
       </div>
-  );
-};
+    );
+  }
+}
 
 export default App;
