@@ -97,6 +97,23 @@ func Test_TopQuestion(t *testing.T) {
 		t.Errorf(`Expected a string of questions. Got '%v'`, resp.Body.String())
 	}
 }
+
+func Test_GetUnanswered(t *testing.T) {
+	req, _ := http.NewRequest("GET", "/getUnanswered", nil)
+	req.Header.Set("Content-Type", "application/json")
+
+	a := http.HandlerFunc(database.GetUnanswered)
+	resp := httptest.NewRecorder()
+	a.ServeHTTP(resp, req)
+	checkResponseCode(t, http.StatusOK, resp.Code)
+
+	fmt.Println("resp", resp.Body.String())
+
+	if resp.Body.String() != `[[{"Key":"_id","Value":"61fdd6999ff44333f800c14d"},{"Key":"question","Value":"Why me?"},{"Key":"user","Value":"61fdd6999ff44333f800c14c"},{"Key":"upvotes","Value":23},{"Key":"downvotes","Value":1},{"Key":"is_answered","Value":false},{"Key":"followers","Value":[]},{"Key":"topics","Value":[]},{"Key":"answers","Value":[]},{"Key":"comments","Value":[]}],[{"Key":"_id","Value":"61fdf8c7cc1711bfb99ae5f8"},{"Key":"question","Value":"Why Software Engineering?"},{"Key":"user","Value":"61fdf8c7cc1711bfb99ae5f7"},{"Key":"upvotes","Value":100},{"Key":"downvotes","Value":56},{"Key":"is_answered","Value":false},{"Key":"followers","Value":[]},{"Key":"topics","Value":[]},{"Key":"answers","Value":[]},{"Key":"comments","Value":[]}]]` {
+		t.Errorf(`Expected a list of all unanswered questions and Got '%v'`, resp.Body.String())
+	}
+}
+
 func Test_SelectedQuestion(t *testing.T) {
 	var jsonStr = []byte(`{"_id": "62217301ecf350ef0c2e0dc5"}`)
 	req, _ := http.NewRequest("POST", "/selectedquestion", bytes.NewReader(jsonStr))

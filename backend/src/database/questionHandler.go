@@ -154,5 +154,32 @@ func FindMatchingQuestions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(jsonResponse)
+}
 
+func GetUnanswered(w http.ResponseWriter, r *http.Request) {
+	collection := getQuestionCollection()
+	filter := bson.D{{"is_answered", bson.D{{"$eq", false}}}}
+	cursor, err := collection.Find(context.TODO(), filter)
+	var results []bson.D
+	if err != nil {
+		fmt.Println("Finding unanswered questions ERROR:", err)
+		defer cursor.Close(context.TODO())
+	} else {
+		for cursor.Next(context.TODO()) {
+			var result bson.D
+			err := cursor.Decode(&result)
+			fmt.Println("cursor and result", cursor, result)
+			if err != nil {
+				fmt.Println("cursor.Next() error:", err)
+				os.Exit(1)
+			} else {
+				results = append(results, result)
+			}
+		}
+	}
+	jsonResponse, err := json.Marshal(results)
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
 }
