@@ -1,17 +1,12 @@
-import React from 'react';
-import './NewCategories.css';
-import Grid from './Grid';
-// import CustomButton from "./CustomButton";
+import React from "react";
+import "./css/NewCategories.css"
 
 function NewCategories() {
-  
-    console.log('New Category rendered')
+  console.log("New Category rendered");
   return (
     <div>
-    <div className='text'> Select atleast five categories</div>
-    <div className="container">
-      <Grid />
-    </div>
+      <div className="text-grid"> Select atleast five categories</div>
+      <div className="container-grid">{/* <Grid /> */}</div>
     </div>
   );
 }

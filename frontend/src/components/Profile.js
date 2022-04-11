@@ -10,7 +10,7 @@ export default function Profile({ user }) {
         <nav aria-label="breadcrumb" className="main-breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <a href="index.html">Home</a>
+              <a href="/">Home</a>
             </li>
             <li className="breadcrumb-item">
               <a href="javascript:void(0)"></a>
@@ -155,7 +155,7 @@ export default function Profile({ user }) {
             </div>
           </div>
           <div className="col-md-8">
-            <div className="card mb-3">
+            <div className="card mb-3" style={{ zIndex: "-1" }}> 
               <div className="card-body">
                 <div className="row">
                   <div className="col-sm-3">
