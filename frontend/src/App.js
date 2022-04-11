@@ -12,7 +12,6 @@ import QuoraHeader from "./components/QuoraHeader";
 import NewCategories from "./components/NewCategories";
 import Answer from "./components/Answer";
 
-
 function App() {
   const user = useSelector(selectUser);
   const [showFade, setShowFade] = useState(false);
@@ -40,16 +39,17 @@ function App() {
   } else {
     return (
       <div className="App">
-        <QuoraHeader setShowFade={setShowFade}/>
+        <QuoraHeader setShowFade={setShowFade} />
         <Routes>
-          {/* <Route path="/" element={<Login />} /> */}
-          <Route exact path="/" element={<Quora showFade={showFade} setShowFade={setShowFade} />} />
+          <Route
+            exact
+            path="/"
+            element={<Quora showFade={showFade} setShowFade={setShowFade} />}
+          />
           <Route exact path="/profile" element={<Profile user={user} />} />
-          {/* <Route exact path="/Categories" element={<NewCategories/>} /> */}
+
           <Route exact path="/answers" element={<Answer />} />
         </Routes>
-        {/* <Quora /> */}
-        {/* <Profile /> */}
       </div>
     );
   }
