@@ -2,17 +2,17 @@ import { Avatar } from "@material-ui/core";
 import React,{useState} from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../feature/userSlice";
-// import "./css/QuoraBox.css";
+import "./css/QuoraBox.css";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import Zoom from "@material-ui/core/Zoom";
 
 
-function QuoraBox(props) {
+function Answerbox(props) {
   const [isExpanded, setExpanded] = useState(false);
 
   const [note, setNote] = useState({
-    title: "",
+    // title: "",
     content: ""
   });
 
@@ -30,7 +30,7 @@ function QuoraBox(props) {
   function submitNote(event) {
     props.onAdd(note);
     setNote({
-      title: "",
+      // title: "",
       content: ""
     });
     event.preventDefault();
@@ -57,22 +57,17 @@ function QuoraBox(props) {
   // );
 
 <div>
-        <form className="create-note">
-          {isExpanded && (
-            <input
-              name="title"
-              onChange={handleChange}
-              value={note.title}
-              placeholder="Title"
-            />
-          )}
+        <form className="create-ans">
+          {isExpanded}
+
+
 
           <textarea
           name="content"
           onClick={expand}
           onChange={handleChange}
           value={note.content}
-          placeholder="Post a Question..."
+          placeholder="Post your answer..."
           rows={isExpanded ? 3 : 1}
         />
         <Zoom in={isExpanded}>
@@ -86,4 +81,4 @@ function QuoraBox(props) {
 
 }
 
-export default QuoraBox;
+export default Answerbox;

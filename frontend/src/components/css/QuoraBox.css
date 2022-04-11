@@ -8,24 +8,67 @@
     cursor: pointer;
     max-width: 700px;
   }
-  
+
   .quoraBox:hover {
     border: 1px solid rgb(175, 175, 175);
   }
-  
+
   .quoraBox__info {
     display: flex;
     align-items: center;
   }
-  
+
   .quoraBox__info > h5 {
     color: rgb(129, 129, 129);
     font-weight: bold;
     margin-left: 10px;
     font-size: large;
   }
-  
+
   .quoraBox__quora {
     display: flex;
     margin-top: 8px;
+  }
+
+
+
+  form.create-ans {
+    position: relative;
+    left:20rem;
+    width: 41rem;
+    margin: 30px auto 20px 60px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 7px;
+    box-shadow: 0 1px 5px rgb(138, 137, 137);
+
+
+  }
+
+
+  form.create-ans input,
+  form.create-ans textarea {
+    width: 100%;
+    border: none;
+    padding: 4px;
+    outline: none;
+    font-size: 1.2em;
+    font-family: inherit;
+    resize: none;
+  }
+
+
+  form.create-ans button {
+    position: absolute;
+    right: 18px;
+    bottom: -18px;
+    background: #00008B;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    outline: none;
   }

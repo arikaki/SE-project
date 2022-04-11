@@ -1,7 +1,7 @@
 import React from 'react';
 import './NewCategories.css';
 import Grid from './Grid';
-import CustomButton from "./CustomButton";
+// import CustomButton from "./CustomButton";
 
 function NewCategories() {
   
