@@ -12,4 +12,5 @@ func QuestionController(r *mux.Router) {
 	r.HandleFunc("/search", database.FindMatchingQuestions).Methods("POST")
 	r.HandleFunc("/getAll", database.GetAllQ).Methods("GET")
 	r.HandleFunc("/getUnanswered", database.GetUnanswered).Methods("GET")
+	r.HandleFunc("/selectedquestion", database.SelectedQuestion).Methods("POST")
 }
