@@ -61,7 +61,9 @@ func Test_DeleteUser(t *testing.T) {
 	checkResponseCode(t, http.StatusOK, resp.Code)
 
 	fmt.Println("resp", resp.Body.String())
-	t.Errorf(`Expected the product name "User is Deleted". Got '%v'`, resp.Body.String())
+	if resp.Body.String() != ("User is Deleted") {
+		t.Errorf(`Expected the product name "User is Deleted". Got '%v'`, resp.Body.String())
+	}
 
 }
 
