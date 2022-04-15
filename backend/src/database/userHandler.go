@@ -29,26 +29,6 @@ func BsonUser(fullname string, email string, username string, password string, f
 		{"answer", answer},
 	}
 }
-func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int, upvotes int, topic string) bson.D {
-	return bson.D{
-		{"question", question},
-		{"answer", answer},
-		{"username", username},
-		{"downvotes", downvotes},
-		{"upvotes", upvotes},
-		{"topic", topic},
-	}
-
-}
-func BsonAnswer(answer string, username string, upvotes int, downvotes int) bson.D {
-	return bson.D{
-		{"answer", answer},
-		{"username", username},
-		{"upvotes", upvotes},
-		{"downvotes", downvotes},
-	}
-
-}
 
 type selectedQuestionId struct {
 	Question string `json:"Question"`
