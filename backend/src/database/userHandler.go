@@ -51,7 +51,7 @@ func BsonAnswer(answer string, username string, upvotes int, downvotes int) bson
 }
 
 type selectedQuestionId struct {
-	selectedQuestionId primitive.ObjectID
+	Question string `json:"Question"`
 }
 
 type User struct {
@@ -69,11 +69,19 @@ type User struct {
 type Question []primitive.ObjectID
 
 type topic struct {
-	topic string `json:"Topic"`
+	Topic string `json:"Topic"`
 }
-
+type answer struct {
+	Answer []primitive.ObjectID `json:Answer"`
+}
 type userName struct {
 	Username string `json:"UserName"`
+}
+
+type returnAns struct {
+	Username  string `json:"Username"`
+	Upvotes   int    `json:"Upvotes"`
+	Downvotes int    `json:"Downvotes"`
 }
 
 func getUserCollection() *mongo.Collection {
@@ -159,7 +167,6 @@ func GetUser(userName string) (*User, error) {
 		return nil, err
 	}
 	var fetchedUser User
-
 	bsonBytes, _ := bson.Marshal(getResult)
 	bson.Unmarshal(bsonBytes, &fetchedUser)
 	return &fetchedUser, nil
@@ -234,7 +241,7 @@ func TopQuestion(w http.ResponseWriter, r *http.Request) {
 	// project := bson.D{{"topic", 0}}
 	// opts := options.FindOne().SetProjection(project)
 
-	filter := bson.D{{"topic", bson.D{{"$in", data.topic}}}}
+	filter := bson.D{{"topic", bson.D{{"$in", data.Topic}}}}
 	// sort := bson.D{{"upvotes", -1}}
 	projection := bson.D{{"question", 1}, {"_id", 0}, {"topic", 1}}
 	opts := options.Find().SetProjection(projection)
@@ -256,44 +263,61 @@ func SelectedQuestion(w http.ResponseWriter, r *http.Request) {
 	collection := getAnsCollection()
 	coll := getQuesCollection()
 	var data selectedQuestionId
-
+	var ans answer
+	var returnAnswer returnAns
+	var results []returnAns
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	// project := bson.D{{"password", 0}}
-	// opts := options.FindOne().SetProjection(project)
+	// // project := bson.D{{"password", 0}}
+	// // opts := options.FindOne().SetProjection(project)
 
-	// err := collection.FindOne(context.TODO(), bson.D{
-	// 	{"username", bson.D{{"$eq", userName}}},
-	// }, opts).Decode((&getResult))
+	// // err := collection.FindOne(context.TODO(), bson.D{
+	// // 	{"username", bson.D{{"$eq", userName}}},
+	// // }, opts).Decode((&getResult))
 
-	filter := bson.D{{"_id", data.selectedQuestionId}}
+	filter := bson.D{{"question", data.Question}}
 	projection := bson.D{{"answer", 1}}
 	opts := options.FindOne().SetProjection(projection)
 	var result bson.D
 	err1 := coll.FindOne(context.TODO(), filter, opts).Decode(&result)
-
-	filter := bson.D{{"answer", bson.D{{"$in", answer}}}}
-	projection := bson.D{{"answer", 1}, {"username", 1}, {"upvotes", 1}, {"downvotes", 1}}
-	opt := options.Find().SetProjection(projection)
-	cursor, err := collection.Find(context.TODO(), filter, opt)
-	if err != nil {
+	if err1 != nil {
 		//
 	}
-	for cursor.Next(context.TODO()) {
-		if err1 := cursor.Decode(&result); err1 != nil {
-			log.Fatal(err1)
-		}
-		fmt.Println(result)
-		jsonUser, _ := json.Marshal(result)
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonUser)
-	}
+	// result1, _ := json.Marshal(result)
+	bsonBytes, _ := bson.Marshal(result)
 
+	bson.Unmarshal(bsonBytes, &ans)
+
+	filter1 := bson.D{{"_id", bson.D{{"$in", ans.Answer}}}}
+	// projection1 := bson.D{{"answer", 1}, {"username", 1}, {"upvotes", 1}, {"downvotes", 1}}
+	// opt := options.Find().SetProjection(projection1)
+	cursor, err := collection.Find(context.TODO(), filter1)
+	// if err != nil {
+	// 	//
+	// }
+	for cursor.Next(context.TODO()) {
+		var result bson.D
+		err := cursor.Decode(&result)
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			answerList, _ := json.Marshal(result)
+			bson.Unmarshal(answerList, &returnAnswer)
+			results = append(results, returnAnswer)
+		}
+	}
+	// w.Header().Set("Content-Type", "application/json")
+	// w.WriteHeader(http.StatusOK)
+	// w.Write(returnAns)
+	jsonResponse, err := json.Marshal(results)
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
 }
 
 // bson.D{
