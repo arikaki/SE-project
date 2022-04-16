@@ -50,8 +50,11 @@ func BsonAnswer(answer string, username string, upvotes int, downvotes int) bson
 
 }
 
-type selectedQuestionId struct {
+type selectedQuestion struct {
 	Question string `json:"Question"`
+}
+type selectedAnswer struct {
+	Answer string `json:"Answer"`
 }
 
 type User struct {
@@ -262,7 +265,7 @@ func TopQuestion(w http.ResponseWriter, r *http.Request) {
 func SelectedQuestion(w http.ResponseWriter, r *http.Request) {
 	collection := getAnsCollection()
 	coll := getQuesCollection()
-	var data selectedQuestionId
+	var data selectedQuestion
 	var ans answer
 	var returnAnswer returnAns
 	var results []returnAns
@@ -318,6 +321,24 @@ func SelectedQuestion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(jsonResponse)
+}
+
+func UpvoteAnswer(w http.ResponseWriter, r *http.Request) {
+	collection := getAnsCollection()
+	var data selectedAnswer
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"answer", data.Answer}}
+	update := bson.D{{"$inc", bson.D{{"upvotes", 1}}}}
+	result, err1 := collection.UpdateOne(context.Background(), filter, update)
+	if err1 != nil {
+		//
+	}
+	fmt.Println(result.ModifiedCount)
+
 }
 
 // bson.D{
