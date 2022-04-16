@@ -340,6 +340,23 @@ func UpvoteAnswer(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(result.ModifiedCount)
 
 }
+func DownvoteAnswer(w http.ResponseWriter, r *http.Request) {
+	collection := getAnsCollection()
+	var data selectedAnswer
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"answer", data.Answer}}
+	update := bson.D{{"$inc", bson.D{{"upvotes", -1}}}}
+	result, err1 := collection.UpdateOne(context.Background(), filter, update)
+	if err1 != nil {
+		//
+	}
+	fmt.Println(result.ModifiedCount)
+
+}
 
 // bson.D{
 // 	{"fullname", "Harshwardhan"},

@@ -32,7 +32,7 @@ func UserController(r *mux.Router) {
 	r.HandleFunc("/deleteuser", database.DeleteUser).Methods("GET")
 	r.HandleFunc("/topquestion", database.TopQuestion).Methods("GET")
 	r.HandleFunc("/upvoteanswer", database.UpvoteAnswer).Methods("GET")
-
+	r.HandleFunc("/downvoteanswer", database.DownvoteAnswer).Methods("GET")
 }
 
 // func InsertDummyData(w http.ResponseWriter, r *http.Request) {
