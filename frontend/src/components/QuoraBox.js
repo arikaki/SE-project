@@ -6,6 +6,7 @@ import { selectUser } from "../feature/userSlice";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import Zoom from "@material-ui/core/Zoom";
+import axios from "axios";
 
 
 function QuoraBox(props) {
@@ -29,12 +30,31 @@ function QuoraBox(props) {
 
   function submitNote(event) {
     props.onAdd(note);
+    axios.post('http://localhost:8000/api/question/askQ', {
+      Topic: note.title,
+      Question: note.content,
+    }, {
+      "Access-Control-Allow-Origin": "*"
+    })
+    .then(function (response) {
+      if (response.status == 200) {
+        let expiry = new Date();
+        expiry.setDate(expiry.getDate() + 2);
+        document.cookie = `session=${response.headers['x-access-token']}; expires=${expiry.toUTCString()}; path=/login`;
+        props.setIsLoggedIn(true)
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
     setNote({
       title: "",
       content: ""
     });
+    
     event.preventDefault();
   }
+
 
   function expand() {
      setExpanded(true);
