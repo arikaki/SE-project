@@ -74,6 +74,7 @@ type Question []primitive.ObjectID
 type topic struct {
 	Topic string `json:"Topic"`
 }
+
 type answer struct {
 	Answer []primitive.ObjectID `json:Answer"`
 }
@@ -258,7 +259,12 @@ func TopQuestion(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err1)
 		}
 		fmt.Println(result)
+
 	}
+	jsonUser, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonUser)
 
 }
 
@@ -349,7 +355,7 @@ func DownvoteAnswer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	filter := bson.D{{"answer", data.Answer}}
-	update := bson.D{{"$inc", bson.D{{"upvotes", -1}}}}
+	update := bson.D{{"$inc", bson.D{{"downvotes", -1}}}}
 	result, err1 := collection.UpdateOne(context.Background(), filter, update)
 	if err1 != nil {
 		//
@@ -357,6 +363,52 @@ func DownvoteAnswer(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(result.ModifiedCount)
 
 }
+func UpvoteQuestion(w http.ResponseWriter, r *http.Request) {
+	collection := getQuesCollection()
+	var data selectedQuestion
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"question", data.Question}}
+	update := bson.D{{"$inc", bson.D{{"upvotes", 1}}}}
+	result, err1 := collection.UpdateOne(context.Background(), filter, update)
+	if err1 != nil {
+		//
+	}
+	fmt.Println(result.ModifiedCount)
+
+}
+
+func DownvoteQuestion(w http.ResponseWriter, r *http.Request) {
+	collection := getQuesCollection()
+	var data selectedQuestion
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"question", data.Question}}
+	update := bson.D{{"$inc", bson.D{{"downvotes", -1}}}}
+	result, err1 := collection.UpdateOne(context.Background(), filter, update)
+	if err1 != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(result.ModifiedCount)
+
+}
+
+// func report(w http.ResponseWriter, r *http.Request) {
+// 	collection := getQuesCollection()
+// 	var data selectedAnswer
+// 	err := json.NewDecoder(r.Body).Decode(&data)
+// 	if err != nil {
+// 		http.Error(w, err.Error(), http.StatusBadRequest)
+// 		return
+// 	}
+
+// }
 
 // bson.D{
 // 	{"fullname", "Harshwardhan"},

@@ -30,9 +30,11 @@ func UserController(r *mux.Router) {
 	r.HandleFunc("/dummyuser", database.InsertDummyUser).Methods("GET")
 	r.HandleFunc("/dummyquestion", database.InsertDummyQuestion).Methods("GET")
 	r.HandleFunc("/deleteuser", database.DeleteUser).Methods("GET")
-	r.HandleFunc("/topquestion", database.TopQuestion).Methods("GET")
+	r.HandleFunc("/topquestion", database.TopQuestion).Methods("POST")
 	r.HandleFunc("/upvoteanswer", database.UpvoteAnswer).Methods("GET")
 	r.HandleFunc("/downvoteanswer", database.DownvoteAnswer).Methods("GET")
+	r.HandleFunc("/upvotequestion", database.UpvoteQuestion).Methods("GET")
+	r.HandleFunc("/downvotequestion", database.DownvoteQuestion).Methods("GET")
 }
 
 // func InsertDummyData(w http.ResponseWriter, r *http.Request) {
