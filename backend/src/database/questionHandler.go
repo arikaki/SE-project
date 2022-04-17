@@ -14,18 +14,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func bsonQuestion(question string, user primitive.ObjectID, upvotes int, downvotes int, is_answered bool, followers []primitive.ObjectID,
-	topics []primitive.ObjectID, answers []primitive.ObjectID, comments []primitive.ObjectID) bson.D {
+func BsonQuestion(question string, answer []primitive.ObjectID, username string, downvotes int, upvotes int, topic string, is_answered bool) bson.D {
 	return bson.D{
 		{"question", question},
-		{"user", user},
-		{"upvotes", upvotes},
+		{"answer", answer},
+		{"username", username},
 		{"downvotes", downvotes},
+		{"upvotes", upvotes},
+		{"topic", topic},
 		{"is_answered", is_answered},
-		{"followers", followers},
-		{"topics", topics},
-		{"answers", answers},
-		{"comments", comments},
 	}
 }
 
@@ -38,6 +35,7 @@ type Post struct {
 	Isanswered bool   `json:"Isanswered"`
 	Upvotes    int    `json:"Upvotes"`
 	Downvotes  int    `json:"Downvotes"`
+	Topic      string `json:"Topic"`
 }
 
 func getQuestionCollection() *mongo.Collection {
@@ -63,8 +61,7 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 
 	collection := getQuestionCollection()
 
-	questionBson := bsonQuestion(post.Question, primitive.NewObjectID(), post.Upvotes, post.Downvotes, false, []primitive.ObjectID{}, []primitive.ObjectID{},
-		[]primitive.ObjectID{}, []primitive.ObjectID{})
+	questionBson := BsonQuestion(post.Question, []primitive.ObjectID{}, user.Username, post.Downvotes, post.Upvotes, post.Topic, false)
 	// insertResult, err := collection.InsertOne(context.TODO(), harshwardhan)
 	insertResult, err := collection.InsertOne(context.TODO(), questionBson)
 	if err != nil {
@@ -154,5 +151,32 @@ func FindMatchingQuestions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(jsonResponse)
+}
 
+func GetUnanswered(w http.ResponseWriter, r *http.Request) {
+	collection := getQuestionCollection()
+	filter := bson.D{{"is_answered", bson.D{{"$eq", false}}}}
+	cursor, err := collection.Find(context.TODO(), filter)
+	var results []bson.D
+	if err != nil {
+		fmt.Println("Finding unanswered questions ERROR:", err)
+		defer cursor.Close(context.TODO())
+	} else {
+		for cursor.Next(context.TODO()) {
+			var result bson.D
+			err := cursor.Decode(&result)
+			fmt.Println("cursor and result", cursor, result)
+			if err != nil {
+				fmt.Println("cursor.Next() error:", err)
+				os.Exit(1)
+			} else {
+				results = append(results, result)
+			}
+		}
+	}
+	jsonResponse, err := json.Marshal(results)
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
 }

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -8,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"kora.com/project/src/database"
 )
 
@@ -61,7 +63,9 @@ func Test_DeleteUser(t *testing.T) {
 	checkResponseCode(t, http.StatusOK, resp.Code)
 
 	fmt.Println("resp", resp.Body.String())
-	t.Errorf(`Expected the product name "User is Deleted". Got '%v'`, resp.Body.String())
+	if resp.Body.String() != ("User is Deleted") {
+		t.Errorf(`Expected the product name "User is Deleted". Got '%v'`, resp.Body.String())
+	}
 
 }
 
@@ -97,6 +101,23 @@ func Test_TopQuestion(t *testing.T) {
 		t.Errorf(`Expected a string of questions. Got '%v'`, resp.Body.String())
 	}
 }
+
+func Test_GetUnanswered(t *testing.T) {
+	req, _ := http.NewRequest("GET", "/getUnanswered", nil)
+	req.Header.Set("Content-Type", "application/json")
+
+	a := http.HandlerFunc(database.GetUnanswered)
+	resp := httptest.NewRecorder()
+	a.ServeHTTP(resp, req)
+	checkResponseCode(t, http.StatusOK, resp.Code)
+
+	fmt.Println("resp", resp.Body.String())
+
+	if resp.Body.String() != `[[{"Key":"_id","Value":"61fdd6999ff44333f800c14d"},{"Key":"question","Value":"Why me?"},{"Key":"user","Value":"61fdd6999ff44333f800c14c"},{"Key":"upvotes","Value":23},{"Key":"downvotes","Value":1},{"Key":"is_answered","Value":false},{"Key":"followers","Value":[]},{"Key":"topics","Value":[]},{"Key":"answers","Value":[]},{"Key":"comments","Value":[]}],[{"Key":"_id","Value":"61fdf8c7cc1711bfb99ae5f8"},{"Key":"question","Value":"Why Software Engineering?"},{"Key":"user","Value":"61fdf8c7cc1711bfb99ae5f7"},{"Key":"upvotes","Value":100},{"Key":"downvotes","Value":56},{"Key":"is_answered","Value":false},{"Key":"followers","Value":[]},{"Key":"topics","Value":[]},{"Key":"answers","Value":[]},{"Key":"comments","Value":[]}]]` {
+		t.Errorf(`Expected a list of all unanswered questions and Got '%v'`, resp.Body.String())
+	}
+}
+
 func Test_SelectedQuestion(t *testing.T) {
 	var jsonStr = []byte(`{"_id": "62217301ecf350ef0c2e0dc5"}`)
 	req, _ := http.NewRequest("POST", "/selectedquestion", bytes.NewReader(jsonStr))
@@ -111,6 +132,24 @@ func Test_SelectedQuestion(t *testing.T) {
 
 	if resp.Body.String() != `{"answer":"Technology has helped us to fly, drive, sail,communicate"}` {
 		t.Errorf(`Expected a string of answers. Got '%v'`, resp.Body.String())
+	}
+}
+
+func Test_AddAnswer(t *testing.T) {
+	var jsonStr = []byte(`{"Question": "why did you choose uf?", "Answer": "It was the obvious choice"}`)
+	req, _ := http.NewRequest("POST", "/addAnswer", bytes.NewReader(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+	user := database.User{"Harshwardha Chauhan", "harshwardhan0812@gmail.com", "SU", "password", []string{}, 0, 0, []primitive.ObjectID{}, []primitive.ObjectID{}}
+
+	ctxWithUser := context.WithValue(req.Context(), 0, &user)
+	reqWithUser := req.WithContext(ctxWithUser)
+	a := http.HandlerFunc(database.AddAnswer)
+	resp := httptest.NewRecorder()
+	a.ServeHTTP(resp, reqWithUser)
+	checkResponseCode(t, http.StatusOK, resp.Code)
+	fmt.Println("resp", resp.Body.String())
+	if resp.Body.String() != `"Answer succesfully added."` {
+		t.Errorf(`Expected "Answer succesfully added." as response. Got '%v'`, resp.Body.String())
 	}
 }
 

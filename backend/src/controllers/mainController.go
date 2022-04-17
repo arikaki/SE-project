@@ -16,4 +16,5 @@ func MainController(r *mux.Router) {
 	r.HandleFunc("/health-check", healthcheck).Methods("GET")
 	UserController(r.PathPrefix("/user").Subrouter())
 	QuestionController(r.PathPrefix("/question").Subrouter())
+	AnswerController(r.PathPrefix("/answer").Subrouter())
 }
