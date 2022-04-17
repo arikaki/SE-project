@@ -30,7 +30,7 @@ function QuoraBox(props) {
 
   function submitNote(event) {
     props.onAdd(note);
-    axios.post('http://localhost:8000/api/question/askQ', {
+    axios.post('http://localhost:8000/api/question/ask', {
       Topic: note.title,
       Question: note.content,
     }, {
