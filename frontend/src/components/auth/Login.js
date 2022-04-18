@@ -9,12 +9,12 @@ function Login() {
     await signInWithPopup(auth, provider)
       .then((result) => {
         console.log(result.user.displayName);
-        axios.post('http://localhost:8000/login'), {
-         UserName: user.displayName,
-         Password: 'kirthi',
-        },{
-          "Access-control-Allow-Origin": "*"
-        }
+        // axios.post('http://localhost:8000/login'), {
+        //  UserName: user.displayName,
+        //  Password: 'kirthi',
+        // },{
+        //   "Access-control-Allow-Origin": "*"
+        // }
 
       })
       .catch((error) => {
