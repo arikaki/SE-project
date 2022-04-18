@@ -3,10 +3,10 @@ import "./css/Profile.css";
 import { Tab, Tabs } from "react-bootstrap";
 
 export default function Profile({ user }) {
+  // console.log(user);
   return (
     <div className="container">
       <div className="main-body">
-        {/* Breadcrumb */}
         <nav aria-label="breadcrumb" className="main-breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -27,8 +27,8 @@ export default function Profile({ user }) {
               <div className="card-body">
                 <div className="d-flex flex-column align-items-center text-center">
                   <img
-                    // src={user?.photo}
-                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                    src={user?.photo}
+                    // src="https://bootdey.com/img/Content/avatar/avatar7.png"
                     alt="Image of User"
                     className="rounded-circle"
                     width={150}
@@ -67,7 +67,6 @@ export default function Profile({ user }) {
                     </svg>
                     Website
                   </h6>
-                  <span className="text-secondary">https://bootdey.com</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                   <h6 className="mb-0">
@@ -87,7 +86,6 @@ export default function Profile({ user }) {
                     </svg>
                     Github
                   </h6>
-                  <span className="text-secondary">bootdey</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                   <h6 className="mb-0">
@@ -107,7 +105,6 @@ export default function Profile({ user }) {
                     </svg>
                     Twitter
                   </h6>
-                  <span className="text-secondary">@bootdey</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                   <h6 className="mb-0">
@@ -129,7 +126,6 @@ export default function Profile({ user }) {
                     </svg>
                     Instagram
                   </h6>
-                  <span className="text-secondary">bootdey</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                   <h6 className="mb-0">
@@ -149,13 +145,12 @@ export default function Profile({ user }) {
                     </svg>
                     Facebook
                   </h6>
-                  <span className="text-secondary">bootdey</span>
                 </li>
               </ul>
             </div>
           </div>
           <div className="col-md-8">
-            <div className="card mb-3" style={{ zIndex: "-1" }}> 
+            <div className="card mb-3" style={{ zIndex: "-1" }}>
               <div className="card-body">
                 <div className="row">
                   <div className="col-sm-3">
@@ -183,97 +178,30 @@ export default function Profile({ user }) {
               </div>
             </div>
             <div className="row gutters-sm">
-              {/* <div className="col-sm-6 mb-3">
-                <div className="card h-100">
-                  <div className="card-body">
-                    <h6 className="d-flex align-items-center mb-3">
-                      <i className="material-icons text-info mr-2">
-                        assignment
-                      </i>
-                      Project Status
-                    </h6>
-                    <small>Web Design</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                      <div
-                        className="progress-bar bg-primary"
-                        role="progressbar"
-                        style={{ width: "80%" }}
-                        aria-valuenow={80}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
-                    </div>
-                    <small>Website Markup</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                      <div
-                        className="progress-bar bg-primary"
-                        role="progressbar"
-                        style={{ width: "72%" }}
-                        aria-valuenow={72}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
-                    </div>
-                    <small>One Page</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                      <div
-                        className="progress-bar bg-primary"
-                        role="progressbar"
-                        style={{ width: "89%" }}
-                        aria-valuenow={89}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
-                    </div>
-                    <small>Mobile Template</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                      <div
-                        className="progress-bar bg-primary"
-                        role="progressbar"
-                        style={{ width: "55%" }}
-                        aria-valuenow={55}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
-                    </div>
-                    <small>Backend API</small>
-                    <div className="progress mb-3" style={{ height: "5px" }}>
-                      <div
-                        className="progress-bar bg-primary"
-                        role="progressbar"
-                        style={{ width: "66%" }}
-                        aria-valuenow={66}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div> */}
               <Tabs
                 defaultActiveKey="profile"
                 id="uncontrolled-tab-example"
                 className="mb-3"
               >
-                <Tab eventKey="home" title="Home">
+                <Tab eventKey="home" title="Answer">
                   {/* <Sonnet /> */}
                   <div>
-                    <h1>Hellow world</h1>
-                    <p>This is the home tab</p>
+                    <h1>Answer section</h1>
+                    <p>All the answers questions, or count of it.</p>
                   </div>
                 </Tab>
-                <Tab eventKey="profile" title="Profile">
+                <Tab eventKey="profile" title="Question">
                   {/* <Sonnet /> */}
                   <div>
-                    <h1>Hellow </h1>
-                    <p>This is the Second tab</p>
+                    <h1>Question Section </h1>
+                    <p>All the questions asked by the user.</p>
                   </div>
                 </Tab>
-                <Tab eventKey="contact" title="Contact">
+                <Tab eventKey="contact" title="Post">
                   {/* <Sonnet /> */}
                   <div>
-                    <h1>Hellow Master</h1>
-                    <p>This is the Amazing tab</p>
+                    <h1>Post Section</h1>
+                    <p>All the posts done by the user</p>
                   </div>
                 </Tab>
               </Tabs>
