@@ -15,6 +15,7 @@ import { logout, selectUser } from "../feature/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Navbar, Nav, Container, Button, Dropdown } from "react-bootstrap";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import logo1 from "../components/images/kora1.png";
 // import DropdownButton from 'react-bootstrap/DropdownButton'
 
 function QuoraHeader(props) {
@@ -41,8 +42,8 @@ function QuoraHeader(props) {
     <div className="qHeader">
       <Navbar expand="lg">
         <Container fluid>
-          <div className="qHeader__logo" style={{ paddingLeft: "20px" }}>
-            <img src="/logo192.png" alt="logo" />
+          <div className="qHeader__logo" style={{ paddingLeft: "60px" }}>
+            <img src={logo1} alt="logo" />
           </div>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
@@ -54,16 +55,11 @@ function QuoraHeader(props) {
               <Nav.Link href="/">
                 <HomeIcon />
               </Nav.Link>
-              <Nav.Link href="/">
-                <FeaturedPlayListOutlinedIcon />
-              </Nav.Link>
 
-              <Nav.Link href="/">
+              <Nav.Link href="/answers">
                 <AssignmentTurnedInOutlined />
               </Nav.Link>
-              <Nav.Link href="/">
-                <PeopleAltOutlined />
-              </Nav.Link>
+
               <Nav.Link href="/">
                 <NotificationsOutlined />
               </Nav.Link>
