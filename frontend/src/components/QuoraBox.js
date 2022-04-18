@@ -107,8 +107,8 @@ function QuoraBox(props) {
               margin: "5px",
             }}
           >
-            <option value="Maths">Maths</option>
             <option value="Science">Science</option>
+            <option value="Music">Music</option>
             <option value="Technology">Technology</option>
             <option value="Computer">Computer</option>
             <option value="History">History</option>
