@@ -85,8 +85,8 @@ function SidebarOptions() {
         <p className="sidebar-field">Education</p>
       </div>
       <div className="sidebarOption">
-        <Add />
-        <p className="text">Discover Spaces</p>
+        <Add /> Discover Spaces
+        {/* <p className="text">Discover Spaces</p> */}
       </div>
     </div>
   );
