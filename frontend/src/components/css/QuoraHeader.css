@@ -79,6 +79,7 @@
   border: 1px solid lightgray;
   padding: 5px;
   border-radius: 5px;
+  width: 40%;
 }
 
 .qHeader__input > input {
