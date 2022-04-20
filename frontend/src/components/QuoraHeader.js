@@ -54,14 +54,17 @@ function QuoraHeader(props) {
             >
               <Nav.Link href="/">
                 <HomeIcon />
+                HOME
               </Nav.Link>
 
               <Nav.Link href="/answers">
                 <AssignmentTurnedInOutlined />
+                Answers
               </Nav.Link>
 
               <Nav.Link href="/">
                 <NotificationsOutlined />
+                Notifications
               </Nav.Link>
             </Nav>
 
