@@ -6,10 +6,10 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import './css/Grid.css';
+import axios from 'axios';
 import categories from './Category';
 
 function Grid(props) {
-  var buttons = [];
   const [selected, setSelected] = React.useState([]);
 
   const handleClick = (item) => {
@@ -26,8 +26,19 @@ function Grid(props) {
   };
 
   const onCategorySubmit = () => {
-    props.setNewuser(false);
-    localStorage.setItem('NewUser', false);
+    axios.post('http://localhost:8000/api/user/setUserCategory', {
+      Topic: selected
+    }, {
+      "withCredentials": true,
+      "Access-control-Allow-Origin": "http://localhost:8000"
+    })
+      .then((response) => {
+        props.setNewuser(false);
+        localStorage.setItem('NewUser', false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   return (
@@ -39,7 +50,7 @@ function Grid(props) {
               component="img"
               height="130"
               image={`/images/${item}.jpeg`}
-              // alt="green iguana"
+            // alt="green iguana"
             />
             <CardContent className={`${selected.indexOf(item) >= 0 ? ' selected' : ''}`}>
               <Typography gutterBottom variant="h6" component="div">

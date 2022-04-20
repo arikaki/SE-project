@@ -301,10 +301,10 @@ func SetUserCategory(w http.ResponseWriter, r *http.Request) {
 	filter := bson.D{{"username", user.Username}}
 	update := bson.D{{"$set", bson.D{{"topics", post.Topic}}}}
 	result, err1 := collection.UpdateOne(context.TODO(), filter, update)
+	_ = result
 	if err1 != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(result.ModifiedCount, post.Topic, user.Username)
 	jsonResponse, err := json.Marshal("Update Successful")
 	if err != nil {
 		return

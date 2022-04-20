@@ -15,7 +15,7 @@ import Answer from "./components/Answer";
 function App() {
   const user = useSelector(selectUser);
   const [showFade, setShowFade] = useState(false);
-  const [newUser, setNewuser] = useState(localStorage.getItem('NewUser'));
+  const [newUser, setNewuser] = useState(localStorage.getItem('NewUser') == "true");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dispatch = useDispatch();
   

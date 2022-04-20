@@ -10,11 +10,12 @@ function Feed() {
   const [posts, setPosts] = useState([]);
   const [notes, setNotes] = useState([]);
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/question/getAll")
+    axios.get("http://localhost:8000/api/question/getAll", {
+          "withCredentials": true,
+          "Access-control-Allow-Origin": "http://localhost:8000"
+      })
       .then((res) => {
-        console.log(res);
-        // setPosts(res.data);
+        setPosts(res.data);
       })
       .catch((e) => {
         console.log(e);
