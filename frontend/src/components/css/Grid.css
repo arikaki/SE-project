@@ -1,0 +1,18 @@
+.container {
+    display: grid;
+    align-content: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    grid-template-columns: 20rem 20rem 20rem 20rem;
+    grid-template-rows: auto;
+    column-gap: 10px;
+    row-gap: 40px;
+    width: 100%;
+  }
+  .card-icon {
+      width: 300px;
+  }
+
+  .sample {
+      margin: 60px 20px 60px 20px;
+  }

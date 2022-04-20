@@ -4,7 +4,7 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../firebase";
 import axios from "axios";
 
-function Login() {
+function Login(props) {
   const handleSubmit = async () => {
     await signInWithPopup(auth, provider)
       .then((result) => {
@@ -33,7 +33,7 @@ function Login() {
             "withCredentials": true,
             "Access-control-Allow-Origin": "http://localhost:8000"
           })
-            .then((response) => console.log("response", response))
+            .then((response) => props.setNewuser(true))
             .catch((error) => {
               console.log(error);
             });
@@ -44,10 +44,6 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-content">
-        {/* <img
-          src="https://video-public.canva.com/VAD8lt3jPyI/v/ec7205f25c.gif"
-          alt="logo"
-        /> */}
         <button onClick={handleSubmit} className="btn-login">
           Login to continue
         </button>
