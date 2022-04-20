@@ -103,11 +103,7 @@ function QuoraBox(props) {
               margin: "5px",
             }}
           >
-<<<<<<< HEAD
-            <option value="Select/General">Select/General</option>
-=======
             <option selected>Choose...</option>
->>>>>>> 6ad2a452ef8db8ddb539bca3099eff4059df1556
             <option value="Science">Science</option>
             <option value="Music">Music</option>
             <option value="Technology">Technology</option>
