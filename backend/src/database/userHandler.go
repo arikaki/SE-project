@@ -7,13 +7,28 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type Claims struct {
+	Username string `json:"username"`
+	jwt.StandardClaims
+}
+
+type login struct {
+	Email    string `json:"Email"`
+	Username string `json:"UserName"`
+	Password string `json:"Password"`
+}
+
+var SecretKey = []byte(os.Getenv("Cookie_Key"))
 
 func BsonUser(fullname string, email string, username string, password string, followers []primitive.ObjectID,
 	following []primitive.ObjectID, topics []string, question []primitive.ObjectID, answer []primitive.ObjectID) bson.D {
@@ -112,6 +127,57 @@ func FetchUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonUser)
 }
 
+func loginUser(w http.ResponseWriter, username string, password string, isRegister bool) {
+	fetchedUser, _ := GetUser(username)
+	if err := bcrypt.CompareHashAndPassword([]byte(fetchedUser.Password), []byte(password)); err != nil {
+		//err
+	}
+	claims := &Claims{
+		Username: fetchedUser.Username,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString(SecretKey)
+	if err != nil {
+		// err
+	}
+
+	expiration := time.Now().Add(24 * time.Hour)
+	cookie := http.Cookie{Name: "Session", Value: tokenString, Expires: expiration}
+	http.SetCookie(w, &cookie)
+
+	w.Header().Set("Content-Type", "application/json")
+
+	//specify HTTP status code
+	w.WriteHeader(http.StatusOK)
+
+	//convert struct to JSON
+	response := "Login Successful"
+	if isRegister {
+		response = "Inserted User"
+	}
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		return
+	}
+	//update response
+	w.Write(jsonResponse)
+}
+
+func Login(w http.ResponseWriter, r *http.Request) {
+	var data User
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	loginUser(w, data.Username, data.Password, false)
+}
+
 func InsertUsers(w http.ResponseWriter, r *http.Request) {
 	var post User
 
@@ -126,11 +192,11 @@ func InsertUsers(w http.ResponseWriter, r *http.Request) {
 
 	collection := getUserCollection()
 	insertResult, err := collection.InsertOne(context.TODO(), user)
+	_ = insertResult
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("Inserted multiple documents: ", insertResult.InsertedID)
+	loginUser(w, post.Username, post.Password, true)
 }
 
 func GetUser(userName string) (*User, error) {

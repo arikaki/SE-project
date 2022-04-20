@@ -24,7 +24,7 @@ func Test_Login(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/login", bytes.NewReader(jsonStr))
 	req.Header.Set("Content-Type", "application/json")
 
-	a := http.HandlerFunc(Login)
+	a := http.HandlerFunc(database.Login)
 	resp := httptest.NewRecorder()
 	a.ServeHTTP(resp, req)
 	checkResponseCode(t, http.StatusOK, resp.Code)

@@ -8,19 +8,39 @@ function Login() {
   const handleSubmit = async () => {
     await signInWithPopup(auth, provider)
       .then((result) => {
-        console.log(result.user.displayName);
-        // axios.post('http://localhost:8000/login'), {
-        //  UserName: user.displayName,
-        //  Password: 'kirthi',
-        // },{
-        //   "Access-control-Allow-Origin": "*"
-        // }
-
+        const { user } = result;
+        const { createdAt, lastLoginAt } = user.metadata;
+        if (Math.abs(createdAt - lastLoginAt) > 10) {
+          axios.post('http://localhost:8000/login', {
+            UserName: user.displayName,
+            Password: 'password'
+          }, {
+            "withCredentials": true,
+            "Access-control-Allow-Origin": "http://localhost:8000"
+          })
+            .then((response) => console.log("response", response))
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+        else {
+          axios.post('http://localhost:8000/api/user/insert', {
+            Name: user.displayName,
+            Email: user.email,
+            Password: "password",
+            Username: user.displayName
+          }, {
+            "withCredentials": true,
+            "Access-control-Allow-Origin": "http://localhost:8000"
+          })
+            .then((response) => console.log("response", response))
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       })
-      .catch((error) => {
-        console.log(error);
-      });
   };
+
   return (
     <div className="login-container">
       <div className="login-content">
