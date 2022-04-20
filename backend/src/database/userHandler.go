@@ -29,7 +29,7 @@ func BsonUser(fullname string, email string, username string, password string, f
 		{"answer", answer},
 	}
 }
-func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int, upvotes int, topic string) bson.D {
+func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*/, answer []primitive.ObjectID, username string, downvotes int, upvotes int, topic string, report int) bson.D {
 	return bson.D{
 		{"question", question},
 		{"answer", answer},
@@ -37,6 +37,7 @@ func BsonQuestion(question string /* upvotes int, comments []primitive.ObjectID*
 		{"downvotes", downvotes},
 		{"upvotes", upvotes},
 		{"topic", topic},
+		{"report", report},
 	}
 
 }
@@ -72,11 +73,14 @@ type User struct {
 type Question []primitive.ObjectID
 
 type topic struct {
-	Topic string `json:"Topic"`
+	Topic []string `json:"Topic"`
 }
 
 type answer struct {
 	Answer []primitive.ObjectID `json:Answer"`
+}
+type report struct {
+	Report int `json:Report"`
 }
 type userName struct {
 	Username string `json:"UserName"`
@@ -84,6 +88,7 @@ type userName struct {
 
 type returnAns struct {
 	Username  string `json:"Username"`
+	Answers   string `json:"Answer"`
 	Upvotes   int    `json:"Upvotes"`
 	Downvotes int    `json:"Downvotes"`
 }
@@ -246,25 +251,23 @@ func TopQuestion(w http.ResponseWriter, r *http.Request) {
 	// opts := options.FindOne().SetProjection(project)
 
 	filter := bson.D{{"topic", bson.D{{"$in", data.Topic}}}}
-	// sort := bson.D{{"upvotes", -1}}
+	// // sort := bson.D{{"upvotes", -1}}
 	projection := bson.D{{"question", 1}, {"_id", 0}, {"topic", 1}}
 	opts := options.Find().SetProjection(projection)
 	var result bson.D
 	cursor, err := collection.Find(context.TODO(), filter, opts)
 	if err != nil {
-		//
+
 	}
 	for cursor.Next(context.TODO()) {
 		if err1 := cursor.Decode(&result); err1 != nil {
 			log.Fatal(err1)
 		}
-		fmt.Println(result)
-
+		jsonUser, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsonUser)
 	}
-	jsonUser, _ := json.Marshal(result)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonUser)
 
 }
 
@@ -273,8 +276,8 @@ func SelectedQuestion(w http.ResponseWriter, r *http.Request) {
 	coll := getQuesCollection()
 	var data selectedQuestion
 	var ans answer
-	var returnAnswer returnAns
-	var results []returnAns
+	// var returnAnswer returnAns
+	// var results []returnAns
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -298,35 +301,41 @@ func SelectedQuestion(w http.ResponseWriter, r *http.Request) {
 	}
 	// result1, _ := json.Marshal(result)
 	bsonBytes, _ := bson.Marshal(result)
-
 	bson.Unmarshal(bsonBytes, &ans)
 
 	filter1 := bson.D{{"_id", bson.D{{"$in", ans.Answer}}}}
-	// projection1 := bson.D{{"answer", 1}, {"username", 1}, {"upvotes", 1}, {"downvotes", 1}}
-	// opt := options.Find().SetProjection(projection1)
-	cursor, err := collection.Find(context.TODO(), filter1)
-	// if err != nil {
-	// 	//
-	// }
+	projection1 := bson.D{{"username", 1}, {"answer", 1}, {"upvotes", 1}, {"downvotes", 1}}
+	opt := options.Find().SetProjection(projection1)
+	cursor, err := collection.Find(context.TODO(), filter1, opt)
+	if err != nil {
+		//
+	}
+	var result1 bson.D
 	for cursor.Next(context.TODO()) {
-		var result bson.D
-		err := cursor.Decode(&result)
+		err := cursor.Decode(&result1)
 		if err != nil {
 			log.Fatal(err)
-		} else {
-			answerList, _ := json.Marshal(result)
-			bson.Unmarshal(answerList, &returnAnswer)
-			results = append(results, returnAnswer)
-		}
+		} //  else {
+		// 	// answerList, _ := json.Marshal(result1)
+		// 	// fmt.Println("results", result1)
+		// 	// bson.Unmarshal(answerList, &returnAnswer)
+		// 	// results = append(results, result1)
+		// 	fmt.Println("results")
+		// }
+		jsonUser, _ := json.Marshal(result1)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsonUser)
+		// w.Header().Set("Content-Type", "application/json")
+		// w.WriteHeader(http.StatusOK)
+		// w.Write(results)
 	}
-	// w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader(http.StatusOK)
-	// w.Write(returnAns)
-	jsonResponse, err := json.Marshal(results)
-	if err != nil {
-		return
-	}
-	w.Write(jsonResponse)
+
+	// jsonResponse, err := json.Marshal(results)
+	// if err != nil {
+	// 	return
+	// }
+	// w.Write(jsonResponse)
 }
 
 func UpvoteAnswer(w http.ResponseWriter, r *http.Request) {
@@ -344,6 +353,11 @@ func UpvoteAnswer(w http.ResponseWriter, r *http.Request) {
 		//
 	}
 	fmt.Println(result.ModifiedCount)
+	jsonResponse, err := json.Marshal("Upvote Successful")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
 
 }
 func DownvoteAnswer(w http.ResponseWriter, r *http.Request) {
@@ -361,6 +375,11 @@ func DownvoteAnswer(w http.ResponseWriter, r *http.Request) {
 		//
 	}
 	fmt.Println(result.ModifiedCount)
+	jsonResponse, err := json.Marshal("Downvote Successful")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
 
 }
 func UpvoteQuestion(w http.ResponseWriter, r *http.Request) {
@@ -378,6 +397,11 @@ func UpvoteQuestion(w http.ResponseWriter, r *http.Request) {
 		//
 	}
 	fmt.Println(result.ModifiedCount)
+	jsonResponse, err := json.Marshal("Upvote Successful")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
 
 }
 
@@ -396,17 +420,21 @@ func DownvoteQuestion(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	fmt.Println(result.ModifiedCount)
+	jsonResponse, err := json.Marshal("Downvote Successful")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
 
 }
 
-// func report(w http.ResponseWriter, r *http.Request) {
-// 	collection := getQuesCollection()
-// 	var data selectedAnswer
-// 	err := json.NewDecoder(r.Body).Decode(&data)
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusBadRequest)
-// 		return
-// 	}
+// fmt.Println("answers", rep)
+// fmt.Println("Data", data)
+// fmt.Println("result", result)
+// jsonUser, _ := json.Marshal(result)
+// w.Header().Set("Content-Type", "application/json")
+// w.WriteHeader(http.StatusOK)
+// w.Write(jsonUser)
 
 // }
 
