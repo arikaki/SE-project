@@ -99,17 +99,12 @@ func GetAllQ(w http.ResponseWriter, r *http.Request) {
 		// return allQuestions, err
 	}
 
-	// once exhausted, close the cursor
 	result.Close(context.TODO())
-
-	if len(allQuestions) == 0 {
-		fmt.Println("return", allQuestions)
-		// return allQuestions, mongo.ErrNoDocuments
+	jsonResponse, err1 := json.Marshal(allQuestions)
+	if err1 != nil {
+		return
 	}
-
-	// return tasks, nil
-
-	fmt.Println("Fetched Question", allQuestions)
+	w.Write(jsonResponse)
 }
 
 func FindMatchingQuestions(w http.ResponseWriter, r *http.Request) {

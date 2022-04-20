@@ -25,8 +25,13 @@ function Grid(props) {
     setSelected(selectedCopy)
   };
 
+  const onCategorySubmit = () => {
+    props.setNewuser(false);
+    localStorage.setItem('NewUser', false);
+  }
+
   return (
-    <div className="container">
+    <div className="container1">
       {categories.map((item) => {
         return (<Card className='card-icon' onClick={() => handleClick(item)}>
           <CardActionArea>
@@ -44,7 +49,7 @@ function Grid(props) {
           </CardActionArea>
         </Card>)
       })}
-      <button className="card-icon sample" variant="contained" disabled={selected.length < 5} onClick={() => props.setNewuser(false)}>
+      <button className="card-icon sample" variant="contained" disabled={selected.length < 5} onClick={onCategorySubmit}>
         Continue
       </button>
     </div>

@@ -19,7 +19,11 @@ function Login(props) {
             "withCredentials": true,
             "Access-control-Allow-Origin": "http://localhost:8000"
           })
-            .then((response) => console.log("response", response))
+            .then((response) => {
+              localStorage.setItem('Login', true);
+              props.setIsLoggedIn(true);
+              // console.log("response", response);
+            })
             .catch((error) => {
               console.log(error);
             });
@@ -34,7 +38,12 @@ function Login(props) {
             "withCredentials": true,
             "Access-control-Allow-Origin": "http://localhost:8000"
           })
-            .then((response) => props.setNewuser(true))
+            .then((response) => {
+              localStorage.setItem('Login', true);
+              props.setIsLoggedIn(true);
+              props.setNewuser(true);
+              localStorage.setItem('NewUser', true);
+            })
             .catch((error) => {
               console.log(error);
             });
