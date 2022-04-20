@@ -1,4 +1,3 @@
-import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../feature/userSlice";
@@ -6,8 +5,6 @@ import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import Zoom from "@material-ui/core/Zoom";
 import axios from "axios";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Dropdown from "react-bootstrap/Dropdown";
 
 function QuoraBox(props) {
   const [isExpanded, setExpanded] = useState(false);
@@ -106,7 +103,11 @@ function QuoraBox(props) {
               margin: "5px",
             }}
           >
+<<<<<<< HEAD
             <option value="Select/General">Select/General</option>
+=======
+            <option selected>Choose...</option>
+>>>>>>> 6ad2a452ef8db8ddb539bca3099eff4059df1556
             <option value="Science">Science</option>
             <option value="Music">Music</option>
             <option value="Technology">Technology</option>
