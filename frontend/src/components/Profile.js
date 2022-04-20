@@ -3,24 +3,9 @@ import "./css/Profile.css";
 import { Tab, Tabs } from "react-bootstrap";
 
 export default function Profile({ user }) {
-  // console.log(user);
   return (
     <div className="container">
       <div className="main-body">
-        <nav aria-label="breadcrumb" className="main-breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="/">Home</a>
-            </li>
-            <li className="breadcrumb-item">
-              <a href="javascript:void(0)"></a>
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              Profile
-            </li>
-          </ol>
-        </nav>
-        {/* /Breadcrumb */}
         <div className="row gutters-sm">
           <div className="col-md-4 mb-3">
             <div className="card">

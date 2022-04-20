@@ -15,6 +15,7 @@ import Answer from "./components/Answer";
 function App() {
   const user = useSelector(selectUser);
   const [showFade, setShowFade] = useState(false);
+  const [newUser, setNewuser] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,10 +33,12 @@ function App() {
       }
     });
   }, [dispatch]);
-  // console.log(user);
 
   if (!user) {
-    return <Login />;
+    return <Login setNewuser={setNewuser}/>;
+  } else
+  if (newUser) {
+    return <NewCategories setNewuser={setNewuser}/>
   } else {
     return (
       <div className="App">
