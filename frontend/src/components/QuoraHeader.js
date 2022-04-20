@@ -80,7 +80,7 @@ function QuoraHeader(props) {
               className="me-auto"
               style={{
                 position: "relative",
-                left: "13rem",
+                left: "5%",
               }}
             >
               <NavDropdown
@@ -88,10 +88,10 @@ function QuoraHeader(props) {
                 style={{ backgroundColor: "#90EE90", borderRadius: "20px" }}
               >
                 <NavDropdown.Item href="/profile">
-                  <Button variant="primary">Profile</Button>
+                  <Button variant="primary" style={{width: "100%"}}>Profile</Button>
                 </NavDropdown.Item>
                 <NavDropdown.Item href="#action4">
-                  <Button variant="danger" onClick={handleLogout}>
+                  <Button variant="danger" style={{width: "100%"}} onClick={handleLogout}>
                     Log Out
                   </Button>
                 </NavDropdown.Item>

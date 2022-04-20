@@ -10,6 +10,7 @@
 }
 .sidebar-field {
   padding-left: 15px;
+  font-size: 20px;
 }
 
 .sidebarOption:hover {
@@ -17,7 +18,7 @@
   border-radius: 5px;
 }
 .sidebarOption > img {
-  height: 30px;
+  height: 50px;
   border-radius: 5px;
   margin-left: 20px;
 }
@@ -30,7 +31,7 @@
   margin-left: 10px;
   color: gray;
   font-weight: 400;
-  font-size: 13px;
+  font-size: 18px;
 }
 
 .sidebarOption > .text {
