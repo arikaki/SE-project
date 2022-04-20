@@ -9,10 +9,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import Profile from "./components/Profile";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import QuoraHeader from "./components/QuoraHeader";
+import NewCategories from "./components/NewCategories";
+import Answer from "./components/Answer";
 
 function App() {
   const user = useSelector(selectUser);
   const [showFade, setShowFade] = useState(false);
+  const [newUser, setNewuser] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,21 +33,26 @@ function App() {
       }
     });
   }, [dispatch]);
-  // console.log(user);
 
   if (!user) {
-    return <Login />;
+    return <Login setNewuser={setNewuser}/>;
+  } else
+  if (newUser) {
+    return <NewCategories setNewuser={setNewuser}/>
   } else {
     return (
       <div className="App">
-        <QuoraHeader setShowFade={setShowFade}/>
+        <QuoraHeader setShowFade={setShowFade} />
         <Routes>
-          {/* <Route path="/" element={<Login />} /> */}
-          <Route exact path="/" element={<Quora showFade={showFade} setShowFade={setShowFade} />} />
+          <Route
+            exact
+            path="/"
+            element={<Quora showFade={showFade} setShowFade={setShowFade} />}
+          />
           <Route exact path="/profile" element={<Profile user={user} />} />
+
+          <Route exact path="/answers" element={<Answer />} />
         </Routes>
-        {/* <Quora /> */}
-        {/* <Profile /> */}
       </div>
     );
   }

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -8,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"kora.com/project/src/database"
 )
 
@@ -22,7 +24,7 @@ func Test_Login(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/login", bytes.NewReader(jsonStr))
 	req.Header.Set("Content-Type", "application/json")
 
-	a := http.HandlerFunc(Login)
+	a := http.HandlerFunc(database.Login)
 	resp := httptest.NewRecorder()
 	a.ServeHTTP(resp, req)
 	checkResponseCode(t, http.StatusOK, resp.Code)
@@ -130,6 +132,24 @@ func Test_SelectedQuestion(t *testing.T) {
 
 	if resp.Body.String() != `{"answer":"Technology has helped us to fly, drive, sail,communicate"}` {
 		t.Errorf(`Expected a string of answers. Got '%v'`, resp.Body.String())
+	}
+}
+
+func Test_AddAnswer(t *testing.T) {
+	var jsonStr = []byte(`{"Question": "why did you choose uf?", "Answer": "It was the obvious choice"}`)
+	req, _ := http.NewRequest("POST", "/addAnswer", bytes.NewReader(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+	user := database.User{"Harshwardha Chauhan", "harshwardhan0812@gmail.com", "SU", "password", []string{}, 0, 0, []primitive.ObjectID{}, []primitive.ObjectID{}}
+
+	ctxWithUser := context.WithValue(req.Context(), 0, &user)
+	reqWithUser := req.WithContext(ctxWithUser)
+	a := http.HandlerFunc(database.AddAnswer)
+	resp := httptest.NewRecorder()
+	a.ServeHTTP(resp, reqWithUser)
+	checkResponseCode(t, http.StatusOK, resp.Code)
+	fmt.Println("resp", resp.Body.String())
+	if resp.Body.String() != `"Answer succesfully added."` {
+		t.Errorf(`Expected "Answer succesfully added." as response. Got '%v'`, resp.Body.String())
 	}
 }
 
