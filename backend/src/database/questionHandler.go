@@ -14,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func BsonQuestion(question string, answer []primitive.ObjectID, username string, downvotes int, upvotes int, topic string, is_answered bool) bson.D {
+func BsonQuestion(question string, answer []primitive.ObjectID, username string, downvotes int, upvotes int, topic string, is_answered bool, report int) bson.D {
 	return bson.D{
 		{"question", question},
 		{"answer", answer},
@@ -23,6 +23,7 @@ func BsonQuestion(question string, answer []primitive.ObjectID, username string,
 		{"upvotes", upvotes},
 		{"topic", topic},
 		{"is_answered", is_answered},
+		{"report", report},
 	}
 }
 
@@ -61,7 +62,7 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 
 	collection := getQuestionCollection()
 
-	questionBson := BsonQuestion(post.Question, []primitive.ObjectID{}, user.Username, post.Downvotes, post.Upvotes, post.Topic, false)
+	questionBson := BsonQuestion(post.Question, []primitive.ObjectID{}, user.Username, post.Downvotes, post.Upvotes, post.Topic, false, 0)
 	// insertResult, err := collection.InsertOne(context.TODO(), harshwardhan)
 	insertResult, err := collection.InsertOne(context.TODO(), questionBson)
 	if err != nil {
@@ -179,4 +180,192 @@ func GetUnanswered(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(jsonResponse)
+}
+func UpvoteQuestion(w http.ResponseWriter, r *http.Request) {
+	collection := getQuestionCollection()
+	var data selectedQuestion
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"question", data.Question}}
+	update := bson.D{{"$inc", bson.D{{"upvotes", 1}}}}
+	result, err1 := collection.UpdateOne(context.Background(), filter, update)
+	if err1 != nil {
+		//
+	}
+	fmt.Println(result.ModifiedCount)
+	jsonResponse, err := json.Marshal("Upvote Successful")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
+
+}
+
+func DownvoteQuestion(w http.ResponseWriter, r *http.Request) {
+	collection := getQuestionCollection()
+	var data selectedQuestion
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"question", data.Question}}
+	update := bson.D{{"$inc", bson.D{{"downvotes", -1}}}}
+	result, err1 := collection.UpdateOne(context.Background(), filter, update)
+	if err1 != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(result.ModifiedCount)
+	jsonResponse, err := json.Marshal("Downvote Successful")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
+}
+
+func Report(w http.ResponseWriter, r *http.Request) {
+	collection := getQuestionCollection()
+	var data selectedQuestion
+	// var rep reprt
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"question", data.Question}}
+	projection := bson.D{{"report", 1}}
+	opts := options.FindOne().SetProjection(projection)
+	var result bson.D
+	err1 := collection.FindOne(context.TODO(), filter, opts).Decode(&result)
+	if err1 != nil {
+		//
+	}
+	// bsonBytes, _ := bson.Marshal(result)
+	// bson.Unmarshal(bsonBytes, &rep)
+	var match int32 = 4
+	if result[1].Value != match {
+		filter := bson.D{{"question", data.Question}}
+		update := bson.D{{"$inc", bson.D{{"report", 1}}}}
+		result, err1 := collection.UpdateOne(context.Background(), filter, update)
+		if err1 != nil {
+			//
+		}
+		fmt.Println(result.ModifiedCount)
+		jsonResponse, err := json.Marshal("Question Reported Sucessfully")
+		if err != nil {
+			return
+		}
+		w.Write(jsonResponse)
+	} else {
+		result, err := collection.DeleteOne(r.Context(), bson.D{{"question", data.Question}})
+		if err1 != nil {
+			log.Fatal(err)
+		}
+		if result.DeletedCount == 0 {
+			fmt.Println("Question not found.")
+		}
+		jsonResponse, err := json.Marshal("Question reported Frequently, so it is deleted")
+		if err != nil {
+			return
+		}
+		w.Write(jsonResponse)
+	}
+}
+func TopQuestion(w http.ResponseWriter, r *http.Request) {
+	collection := getQuestionCollection()
+	var data topic
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	// coll := getUserCollection()
+	// var user *User
+	// user = r.Context().Value(0).(*User)
+	// project := bson.D{{"topic", 0}}
+	// opts := options.FindOne().SetProjection(project)
+
+	filter := bson.D{{"topic", bson.D{{"$in", data.Topic}}}}
+	// // sort := bson.D{{"upvotes", -1}}
+	projection := bson.D{{"question", 1}, {"_id", 0}, {"topic", 1}}
+	opts := options.Find().SetProjection(projection)
+	var result bson.D
+	cursor, err := collection.Find(context.TODO(), filter, opts)
+	if err != nil {
+
+	}
+	for cursor.Next(context.TODO()) {
+		if err1 := cursor.Decode(&result); err1 != nil {
+			log.Fatal(err1)
+		}
+		jsonUser, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsonUser)
+	}
+
+}
+
+func SelectedQuestion(w http.ResponseWriter, r *http.Request) {
+	collection := getAnswerCollection()
+	coll := getQuestionCollection()
+	var data selectedQuestion
+	var ans answer
+	// var returnAnswer returnAns
+	// var results []returnAns
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// // project := bson.D{{"password", 0}}
+	// // opts := options.FindOne().SetProjection(project)
+
+	// // err := collection.FindOne(context.TODO(), bson.D{
+	// // 	{"username", bson.D{{"$eq", userName}}},
+	// // }, opts).Decode((&getResult))
+
+	filter := bson.D{{"question", data.Question}}
+	projection := bson.D{{"answer", 1}}
+	opts := options.FindOne().SetProjection(projection)
+	var result bson.D
+	err1 := coll.FindOne(context.TODO(), filter, opts).Decode(&result)
+	if err1 != nil {
+		//
+	}
+	// result1, _ := json.Marshal(result)
+	bsonBytes, _ := bson.Marshal(result)
+	bson.Unmarshal(bsonBytes, &ans)
+
+	filter1 := bson.D{{"_id", bson.D{{"$in", ans.Answer}}}}
+	projection1 := bson.D{{"username", 1}, {"answer", 1}, {"upvotes", 1}, {"downvotes", 1}}
+	opt := options.Find().SetProjection(projection1)
+	cursor, err := collection.Find(context.TODO(), filter1, opt)
+	if err != nil {
+		//
+	}
+	var result1 bson.D
+	for cursor.Next(context.TODO()) {
+		err := cursor.Decode(&result1)
+		if err != nil {
+			log.Fatal(err)
+		} //  else {
+		// 	// answerList, _ := json.Marshal(result1)
+		// 	// fmt.Println("results", result1)
+		// 	// bson.Unmarshal(answerList, &returnAnswer)
+		// 	// results = append(results, result1)
+		// 	fmt.Println("results")
+		// }
+		jsonUser, _ := json.Marshal(result1)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsonUser)
+		// w.Header().Set("Content-Type", "application/json")
+		// w.WriteHeader(http.StatusOK)
+		// w.Write(results)
+	}
 }
