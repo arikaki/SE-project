@@ -51,6 +51,7 @@ function App() {
           />
           <Route exact path="/profile" element={<Profile user={user} showFade={showFade} setShowFade={setShowFade} setIsLoggedIn={setIsLoggedIn}/>} />
           <Route exact path="/categories" element={<CategoryPage user={user} notRegister={true} showFade={showFade} setShowFade={setShowFade}/>}/>
+          <Route exact path="/answers" element={<Answer />} />
         </Routes>
       </div>
     );

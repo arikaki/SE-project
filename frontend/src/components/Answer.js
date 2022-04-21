@@ -27,21 +27,21 @@ function Answer() {
 
   return (
     <div className="feed">
-  
+
       <Answerbox onAdd={addNote} />
 
-<div>
-      {notes.map((noteItem, index) => {
-        return (
-          <Addans
-            key={index}
-            id={index}
+      <div>
+        {notes.map((noteItem, index) => {
+          return (
+            <Addans
+              key={index}
+              id={index}
 
-            content={noteItem.content}
-            onDelete={deleteNote}
-          />
-        );
-      })}
+              content={noteItem.content}
+              onDelete={deleteNote}
+            />
+          );
+        })}
       </div>
 
 
