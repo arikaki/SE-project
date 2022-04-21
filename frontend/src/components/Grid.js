@@ -8,9 +8,15 @@ import { CardActionArea } from '@mui/material';
 import './css/Grid.css';
 import axios from 'axios';
 import categories from './Category';
+import { useNavigate } from "react-router-dom";
 
 function Grid(props) {
+  let navigate = useNavigate();
   const [selected, setSelected] = React.useState([]);
+
+  React.useEffect(() => {
+    props.selected && setSelected(props.selected);
+  }, [props.selected])
 
   const handleClick = (item) => {
     let selectedCopy;
@@ -26,6 +32,7 @@ function Grid(props) {
   };
 
   const onCategorySubmit = () => {
+
     axios.post('http://localhost:8000/api/user/setUserCategory', {
       Topic: selected
     }, {
@@ -33,8 +40,12 @@ function Grid(props) {
       "Access-control-Allow-Origin": "http://localhost:8000"
     })
       .then((response) => {
-        props.setNewuser(false);
-        localStorage.setItem('NewUser', false);
+        if (props.notRegister) {
+          navigate("/");
+        } else {
+          props.setNewuser(false);
+          localStorage.setItem('NewUser', false);
+        }
       })
       .catch((error) => {
         console.log(error);

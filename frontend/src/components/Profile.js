@@ -1,10 +1,36 @@
 import React from "react";
 import "./css/Profile.css";
 import { Tab, Tabs } from "react-bootstrap";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
+import axios from "axios";
+import { logout } from "../feature/userSlice";
+import { useDispatch } from "react-redux";
 
-export default function Profile({ user }) {
+export default function Profile({ user, showFade, setShowFade, setIsLoggedIn }) {
+const dispatch = useDispatch();
+  const deleteUser = () => {
+    axios.get("http://localhost:8000/api/user/deleteuser", {
+      "withCredentials": true,
+      "Access-control-Allow-Origin": "http://localhost:8000"
+    })
+      .then((res) => {
+        signOut(auth)
+          .then(() => {
+            localStorage.setItem('Login', false);
+            setIsLoggedIn(false);
+            dispatch(logout());
+          })
+          .catch(() => {
+            console.log("error in logout");
+          });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
   return (
-    <div className="container">
+    <div className={`container ${showFade ? " fade-search" : ""}`} onClick={() => setShowFade(false)}>
       <div className="main-body">
         <div className="row gutters-sm">
           <div className="col-md-4 mb-3">
@@ -27,7 +53,7 @@ export default function Profile({ user }) {
             </div>
           </div>
           <div className="col-md-8">
-            <div className="card mb-3" style={{ zIndex: "-1" }}>
+            <div className="card mb-3">
               <div className="card-body">
                 <div className="row">
                   <div className="col-sm-3">
@@ -47,9 +73,9 @@ export default function Profile({ user }) {
                 <hr />
                 <div className="row">
                   <div className="col-sm-12">
-                    <a className="btn btn-info " target="__blank" href="#">
-                      Edit
-                    </a>
+                    <button className="btn btn-info" type='button' onClick={deleteUser}>
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>

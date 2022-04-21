@@ -22,7 +22,6 @@ function Login(props) {
             .then((response) => {
               localStorage.setItem('Login', true);
               props.setIsLoggedIn(true);
-              // console.log("response", response);
             })
             .catch((error) => {
               console.log(error);

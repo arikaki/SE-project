@@ -79,7 +79,10 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 func GetAllQ(w http.ResponseWriter, r *http.Request) {
 	var allQuestions []*Post
 	collection := getQuestionCollection()
-	result, err := collection.Find(context.TODO(), bson.D{{}})
+	opts := options.Find()
+	opts.SetSort(bson.D{{"_id", -1}})
+	opts.SetLimit(15)
+	result, err := collection.Find(context.TODO(), bson.D{{}}, opts)
 	if err != nil {
 		log.Fatal(err)
 	}

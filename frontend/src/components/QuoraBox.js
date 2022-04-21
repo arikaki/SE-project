@@ -26,26 +26,21 @@ function QuoraBox(props) {
   }
 
   function submitNote(event) {
-    props.onAdd(note);
-    axios
-      .post(
-        "http://localhost:8000/api/question/ask",
-        {
-          Topic: note.title,
-          Question: note.content,
-        },
-        {
-          "Access-Control-Allow-Origin": "*",
-        }
+    axios.post(
+      "http://localhost:8000/api/question/ask",
+      {
+        Topic: note.title,
+        Question: note.content,
+      },
+      {
+        "Access-Control-Allow-Origin": "*",
+        "withCredentials": true,
+      }
       )
       .then(function (response) {
         if (response.status == 200) {
-          let expiry = new Date();
-          expiry.setDate(expiry.getDate() + 2);
-          document.cookie = `session=${
-            response.headers["x-access-token"]
-          }; expires=${expiry.toUTCString()}; path=/login`;
-          props.setIsLoggedIn(true);
+          window.alert("Question Posted!")
+          setExpanded(false);
         }
       })
       .catch(function (error) {
