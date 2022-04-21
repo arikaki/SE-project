@@ -276,16 +276,18 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// err := collection.FindOne(context.TODO(), bson.D{
 	// 	{"username", bson.D{{"$eq", userName}}},
 	// }, opts).Decode((&getResult))
-	result, err := collection.DeleteOne(r.Context(), bson.D{
-		{"username", bson.D{{"$eq", user.Username}}},
-	})
-	fmt.Println("User is deleted", result)
+	result, err := collection.DeleteOne(r.Context(), bson.D{{"username", bson.D{{"$eq", user.Username}}}})
 	if err != nil {
 		fmt.Println("failed to delete the user", err)
 	}
 	if result.DeletedCount == 0 {
 		fmt.Println("user not found.")
 	}
+	jsonResponse, err := json.Marshal("User is deleted")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
 }
 
 func SetUserCategory(w http.ResponseWriter, r *http.Request) {
