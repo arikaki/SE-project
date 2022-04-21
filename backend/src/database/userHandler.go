@@ -88,6 +88,10 @@ type returnAns struct {
 	Downvotes int    `json:"Downvotes"`
 }
 
+type categoryPost struct {
+	Topic []string `json:"Topic"`
+}
+
 func getUserCollection() *mongo.Collection {
 	db, dbPresent := os.LookupEnv("DBName")
 	if !dbPresent {
@@ -284,31 +288,26 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// jsonResponse, err := json.Marshal(results)
-// if err != nil {
-// 	return
-// }
-// w.Write(jsonResponse)
-
-// fmt.Println("answers", rep)
-// fmt.Println("Data", data)
-// fmt.Println("result", result)
-// jsonUser, _ := json.Marshal(result)
-// w.Header().Set("Content-Type", "application/json")
-// w.WriteHeader(http.StatusOK)
-// w.Write(jsonUser)
-
-// }
-
-// bson.D{
-// 	{"fullname", "Harshwardhan"},
-// 	{"email", "harshwardhan0812@gmail.com"},
-// 	{"username", "SU"},
-// 	{"password", "password"},
-// {"followers", [...]primitive.ObjectID{primitive.ObjectID({"$oid": "61fc48c0188132eecabf661e"}), primitive.ObjectID({"$oid": "61fc48c0188132eecabf661f"}),
-// 	primitive.ObjectID({"$oid": "61fc48c0188132eecabf6620"}), primitive.ObjectID({"$oid": "61fc48c0188132eecabf6621"})}},
-// {"following", [...]primitive.ObjectID{primitive.ObjectID("61fc48c0188132eecabf661e"), primitive.ObjectID("61fc48c0188132eecabf661f"),
-// primitive.ObjectID("61fc48c0188132eecabf6620"), primitive.ObjectID("61fc48c0188132eecabf6621")}},
-// {"topics", [...]primitive.ObjectID{primitive.ObjectID("61fc48c0188132eecabf661e"), primitive.ObjectID("61fc48c0188132eecabf661f"),
-// primitive.ObjectID("61fc48c0188132eecabf6620"), primitive.ObjectID("61fc48c0188132eecabf6621")}},
-// }
+func SetUserCategory(w http.ResponseWriter, r *http.Request) {
+	collection := getUserCollection()
+	var post categoryPost
+	user := r.Context().Value(0).(*User)
+	err := json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		fmt.Println("error", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"username", user.Username}}
+	update := bson.D{{"$set", bson.D{{"topics", post.Topic}}}}
+	result, err1 := collection.UpdateOne(context.TODO(), filter, update)
+	_ = result
+	if err1 != nil {
+		log.Fatal(err)
+	}
+	jsonResponse, err := json.Marshal("Update Successful")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
+}

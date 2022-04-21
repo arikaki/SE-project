@@ -30,6 +30,8 @@ function QuoraHeader(props) {
     if (window.confirm("Are you sure to logout ?")) {
       signOut(auth)
         .then(() => {
+          localStorage.setItem('Login', false);
+          props.setIsLoggedIn(false);
           dispatch(logout());
           console.log("Logged out");
         })
