@@ -1,7 +1,22 @@
 # Project - KORA
 
-## Description:
 Kora is a basically a website similar to Quora. It is a place to gain and share knowledge. It's a platform to ask questions and connect with people who contribute unique insights and quality answers. You can even post answers to the questions you know. In this way, information can be shared between individuals, and everyone can get to clarify their doubts.
+
+First time users will be redirected to register page where they will be prompted to sign up through Gmail.
+After registering for the first-time user can select up to five categories from list of categories made available to the User.
+After selecting the Categories user will be redirected to the home page where the user will see the categories on the left side with post a question in the middle followed by the home feed where the user can find question posted by various users.
+There are three tabs Home, Answers, categories, and Search bar.
+User can ask a question in the home feed page where the user can select the category of the question that will be related to the question.
+Users can upvote that user feels it was correctly asked or answered or downvote a question or answer.
+User can also report a question if user feels it was inappropriate and if a particular question was reported frequently, it will be deleted.
+We also have answers tab where users will have questions that are related to the categories that are selected by user at the time of registering.
+We also have a categories page where user can change the categories as per their choice.
+We have search bar where we can search for the questions.
+We have implemented fade option for Seach bar. As soon as user clicks on search bar rest of the pages fades out.
+We have implemented profile tab where user can go to profile page by selecting profile from the drop down of the profile tab.
+In profile page user can see the details like email, mobile number, questions, and answers posted by the user and can also edit the user information.
+We also have an option for the user to delete the account.
+We also implemented logout functionality.
 
 ## Sprint 4
 
@@ -16,7 +31,7 @@ https://user-images.githubusercontent.com/38340989/164368786-0ea98bcc-e263-454f-
 
 ### Link for Sprint4 deliverables: https://github.com/arikaki/SE-project/projects/4
 
-We have accomplished in the project according to the issue/stories conveyed (closed stories in sprint_3) 
+## We have accomplished in the project according to the issue/stories conveyed (closed stories in sprint-4) 
 #### ISSUE 1 - Home page issue
 #### ISSUE 2 - Question card Improvement
 #### ISSUE 3 - Save the added question to the database
