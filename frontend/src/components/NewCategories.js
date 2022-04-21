@@ -1,17 +1,15 @@
 import React from 'react';
-import './NewCategories.css';
+import './css/NewCategories.css';
 import Grid from './Grid';
-import CustomButton from "./CustomButton";
 
-function NewCategories() {
-  
-    console.log('New Category rendered')
+function NewCategories(props) {
   return (
-    <div>
-    <div className='text'> Select atleast five categories</div>
-    <div className="container">
-      <Grid />
-    </div>
+    <div className={`categories ${props.showFade? " fade-search": ""}`} onClick={() => props.setShowFade(false)}>
+      <div className='text1'>Categories</div>
+      {!props.notRegister && <div className='text2'>(Atleast 5)</div>}
+      <div className="column3">
+        <Grid setNewuser={props.setNewuser} selected={props.selected} notRegister={props.notRegister}/>
+      </div>
     </div>
   );
 }

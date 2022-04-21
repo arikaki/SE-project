@@ -11,16 +11,11 @@ import (
 
 var SecretKey = []byte(os.Getenv("Cookie_Key"))
 
-type Claims struct {
-	Username string `json:"username"`
-	jwt.StandardClaims
-}
-
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, _ := r.Cookie("Session")
 		tokenStr := cookie.Value
-		claims := &Claims{}
+		claims := &database.Claims{}
 
 		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
 			// check token signing method etc
@@ -49,6 +44,7 @@ func Auth(next http.Handler) http.Handler {
 			http.Error(w, "User Not Found", http.StatusForbidden)
 			return
 		}
+
 		ctxWithUser := context.WithValue(r.Context(), 0, foundUser)
 		rWithUser := r.WithContext(ctxWithUser)
 

@@ -1,3 +1,25 @@
+# Project - KORA
+
+## Description:
+Kora is a basically a website similar to Quora. It is a place to gain and share knowledge. It's a platform to ask questions and connect with people who contribute unique insights and quality answers. You can even post answers to the questions you know. In this way, information can be shared between individuals, and everyone can get to clarify their doubts. 
+1.	First time users will be redirected to register page where they will be prompted to sign up through Gmail.  
+2.	After registering for the first-time user can select up to five categories from list of categories made available to the User. 
+3.	After selecting the Categories user will be redirected to the home page where the user will see the categories on the left side with post a question in the middle followed by the home feed where the user can find question posted by various users. 
+4.	There are three tabs Home, Answers, categories, and Search bar.
+5.	 User can ask a question in the home feed page where the user can select the category of the question that will be related to the question.  
+6.	Users can upvote that user feels it was correctly asked or answered or downvote a question or answer. 
+7.	User can also report a question if user feels it was inappropriate and if a particular question was reported frequently, it will be deleted.
+8.	We also have answers tab where users will have questions that are related to the categories that are selected by user at the time of registering.
+9.	We also have a categories page where user can change the categories as per their choice.
+10.	We have search bar where we can search for the questions. 
+11.	We have implemented fade option for Seach bar. As soon as user clicks on search bar rest of the pages fades out.
+12.	We have implemented profile tab where user can go to profile page by selecting profile from the drop down of the profile tab.
+13.	In profile page user can see the details like email, mobile number, questions, and answers posted by the user and can also edit the user information.
+14.	We also have an option for the user to delete the account.
+15.	We also implemented logout functionality.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -64,6 +86,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/m
 
 ### Advanced Configuration
 
+
 This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
 ### Deployment
@@ -74,5 +97,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
+# Backend Development server
 
+Run the below commands to start the development server.
+
+> `cd ..\backend\src`
+
+> `go run main.go `
 

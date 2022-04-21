@@ -37,7 +37,6 @@ function Post({ post }) {
   const handleQuill = (value) => {
     setAnswer(value);
   };
-  // console.log(answer);
 
   const handleSubmit = async () => {
     if (post?._id && answer !== "") {
@@ -54,7 +53,6 @@ function Post({ post }) {
       await axios
         .post("/api/answers", body, config)
         .then((res) => {
-          console.log(res.data);
           alert("Answer added succesfully");
           setIsModalOpen(false);
           window.location.href = "/";
@@ -67,16 +65,11 @@ function Post({ post }) {
   return (
     <div className="post">
       <div className="post__info">
-        <Avatar src={post?.user?.photo} />
-        <h4>{post?.user?.userName}</h4>
-
-        <small>
-          <LastSeen date={post?.createdAt} />
-        </small>
+        <h4>{post?.Username}</h4>
       </div>
       <div className="post__body">
         <div className="post__question">
-          <p>{post?.questionName}</p>
+          <p>{post?.Question}</p>
           <button
             onClick={() => {
               setIsModalOpen(true);
@@ -116,7 +109,7 @@ function Post({ post }) {
               />
             </div>
             <div className="modal__button">
-              <button className="cancle" onClick={() => setIsModalOpen(false)}>
+              <button className="cancel" onClick={() => setIsModalOpen(false)}>
                 Cancel
               </button>
               <button onClick={handleSubmit} type="submit" className="add">
@@ -125,79 +118,15 @@ function Post({ post }) {
             </div>
           </Modal>
         </div>
-        {post.questionUrl !== "" && <img src={post.questionUrl} alt="url" />}
       </div>
       <div className="post__footer">
         <div className="post__footerAction">
           <ArrowUpwardOutlined />
           <ArrowDownwardOutlined />
         </div>
-        <RepeatOneOutlined />
-        <ChatBubbleOutlined />
         <div className="post__footerLeft">
-          <ShareOutlined />
-          <MoreHorizOutlined />
+          <button>Report</button>
         </div>
-      </div>
-      <p
-        style={{
-          color: "rgba(0,0,0,0.5)",
-          fontSize: "12px",
-          fontWeight: "bold",
-          margin: "10px 0",
-        }}
-      >
-        {post?.allAnswers.length} Answer(s)
-      </p>
-
-      <div
-        style={{
-          margin: "5px 0px 0px 0px ",
-          padding: "5px 0px 0px 20px",
-          borderTop: "1px solid lightgray",
-        }}
-        className="post__answer"
-      >
-        {post?.allAnswers?.map((_a) => (
-          <>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                padding: "10px 5px",
-                borderTop: "1px solid lightgray",
-              }}
-              className="post-answer-container"
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "10px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  color: "#888",
-                }}
-                className="post-answered"
-              >
-                <Avatar src={_a?.user?.photo} />
-                <div
-                  style={{
-                    margin: "0px 10px",
-                  }}
-                  className="post-info"
-                >
-                  <p>{_a?.user?.userName}</p>
-                  <span>
-                    <LastSeen date={_a?.createdAt} />
-                  </span>
-                </div>
-              </div>
-              <div className="post-answer">{ReactHtmlParser(_a?.answer)}</div>
-            </div>
-          </>
-        ))}
       </div>
     </div>
   );
