@@ -1,7 +1,20 @@
 # Project - KORA
 
+## Description:
+Kora is a basically a website similar to Quora. It is a place to gain and share knowledge. It's a platform to ask questions and connect with people who contribute unique insights and quality answers. You can even post answers to the questions you know. In this way, information can be shared between individuals, and everyone can get to clarify their doubts.
+
 ## Sprint 4
 
+## DEMONSTRATION VIDEO
+
+
+
+https://user-images.githubusercontent.com/38340989/164368786-0ea98bcc-e263-454f-b1b2-385d77567f7a.mp4
+
+
+### Link for API documentation: https://github.com/arikaki/SE-project/wiki/API-DOCUMENTATION
+
+### Link for Sprint4 deliverables: https://github.com/arikaki/SE-project/projects/4
 
 We have accomplished in the project according to the issue/stories conveyed (closed stories in sprint_3) 
 #### ISSUE 1 - Home page issue
@@ -38,27 +51,37 @@ The below API's are used
 3.Added test cases
 4.Review and fixes
 ## 1. API for unaswered questions
+
 The `/getUnanswered` API is used to fetch unanswered questions.
 
+![unanswered](https://user-images.githubusercontent.com/38340989/164368381-495a2448-1763-4905-a46a-79b8f80431f4.jpeg)
+
 ## 2. API to upvote,downvote question
+
 The `/upvotequestion` API is used to upvote questions.
+
 ![image](https://user-images.githubusercontent.com/38340989/164363075-7deb3a42-ac15-4b4c-8a95-6a079b9b7119.png)
 
 
 The `/downvotequestion` API is used to downvote questions.
+
 ![image](https://user-images.githubusercontent.com/38340989/164363007-0f943aad-8044-4d44-9ea8-08d621fb5ed2.png)
 
 
 ## 3. API to Report Question
+
 The `/report` API is used to report questions.
+
 ![image](https://user-images.githubusercontent.com/38340989/164362593-a950ae45-2148-46fb-bbbd-5ddabac980ec.png)
 
 ![image](https://user-images.githubusercontent.com/38340989/164362757-b9050f0a-f636-42fc-9ff9-a1d38a91f0e1.png)
 
 
 ## 3. API to save answer to db
-The `/` API is used to report questions.
 
+The `/addanswer` API is used to report questions.
+
+![WhatsApp Image 2022-04-20 at 11 36 15 PM](https://user-images.githubusercontent.com/38340989/164368426-ea9ccf53-0665-4651-bdea-1ced93f6959b.jpeg)
 
 
 ## 4. API to upvote,downvote answers
@@ -91,6 +114,11 @@ successfully ran the test cases for backend.
 
 ![image](https://user-images.githubusercontent.com/38340989/164363733-190b6553-2465-40a8-9188-40adecfe4aca.png)
 
+## Backend Unit Test Video
+
+
+
+https://user-images.githubusercontent.com/38340989/164368882-b29a67e4-8c32-40cb-bd8c-de6b029d9eb7.mp4
 
 
 
