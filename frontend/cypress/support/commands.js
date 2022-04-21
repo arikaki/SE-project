@@ -24,14 +24,20 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/database";
-import "firebase/firestore";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/database";
+import "firebase/compat/firestore";
 import { attachCustomCommands } from "cypress-firebase";
 
 const fbConfig = {
-  
+    apiKey: "AIzaSyC62LX6ufR_SiZJdLujUiXcR3Iy6xL_dqM",
+    authDomain: "kora-2d67f.firebaseapp.com",
+    projectId: "kora-2d67f",
+    storageBucket: "kora-2d67f.appspot.com",
+    messagingSenderId: "22175424879",
+    appId: "1:22175424879:web:6e6e28e16852105350489a",
+    // measurementId: "G-GRTPFV92RQ"  
 };
 
 firebase.initializeApp(fbConfig);

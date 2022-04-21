@@ -136,12 +136,14 @@ function QuoraBox(props) {
         )}
 
         <textarea
+          id = "333"
           name="content"
           onClick={expand}
           onChange={handleChange}
           value={note.content}
           placeholder="Post a Question..."
           rows={isExpanded ? 3 : 1}
+          
         />
         <Zoom in={isExpanded}>
           <Fab onClick={submitNote}>
