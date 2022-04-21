@@ -37,7 +37,6 @@ function Post({ post }) {
   const handleQuill = (value) => {
     setAnswer(value);
   };
-  // console.log(answer);
 
   const handleSubmit = async () => {
     if (post?._id && answer !== "") {
@@ -54,7 +53,6 @@ function Post({ post }) {
       await axios
         .post("/api/answers", body, config)
         .then((res) => {
-          console.log(res.data);
           alert("Answer added succesfully");
           setIsModalOpen(false);
           window.location.href = "/";
@@ -111,7 +109,7 @@ function Post({ post }) {
               />
             </div>
             <div className="modal__button">
-              <button className="cancle" onClick={() => setIsModalOpen(false)}>
+              <button className="cancel" onClick={() => setIsModalOpen(false)}>
                 Cancel
               </button>
               <button onClick={handleSubmit} type="submit" className="add">
@@ -120,18 +118,14 @@ function Post({ post }) {
             </div>
           </Modal>
         </div>
-        {post.questionUrl !== "" && <img src={post.questionUrl} alt="url" />}
       </div>
       <div className="post__footer">
         <div className="post__footerAction">
           <ArrowUpwardOutlined />
           <ArrowDownwardOutlined />
         </div>
-        <RepeatOneOutlined />
-        <ChatBubbleOutlined />
         <div className="post__footerLeft">
-          <ShareOutlined />
-          <MoreHorizOutlined />
+          <button>Report</button>
         </div>
       </div>
     </div>

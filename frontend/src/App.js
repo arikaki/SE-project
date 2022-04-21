@@ -11,6 +11,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import QuoraHeader from "./components/QuoraHeader";
 import NewCategories from "./components/NewCategories";
 import Answer from "./components/Answer";
+import CategoryPage from "./components/CategoryPage";
 
 function App() {
   const user = useSelector(selectUser);
@@ -31,7 +32,6 @@ function App() {
             uid: authUser.uid,
           })
         );
-        console.log("AuthUser", authUser);
       }
     });
   }, [dispatch]);
@@ -47,14 +47,10 @@ function App() {
       <div className="App">
         <QuoraHeader setIsLoggedIn={setIsLoggedIn} setShowFade={setShowFade} />
         <Routes>
-          <Route
-            exact
-            path="/"
-            element={<Quora showFade={showFade} setShowFade={setShowFade} />}
+          <Route exact path="/" element={<Quora showFade={showFade} setShowFade={setShowFade} />}
           />
-          <Route exact path="/profile" element={<Profile user={user} />} />
-
-          <Route exact path="/answers" element={<Answer />} />
+          <Route exact path="/profile" element={<Profile user={user} showFade={showFade} setShowFade={setShowFade} setIsLoggedIn={setIsLoggedIn}/>} />
+          <Route exact path="/categories" element={<CategoryPage user={user} notRegister={true} showFade={showFade} setShowFade={setShowFade}/>}/>
         </Routes>
       </div>
     );
