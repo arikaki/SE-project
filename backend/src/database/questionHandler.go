@@ -196,7 +196,7 @@ func UpvoteQuestion(w http.ResponseWriter, r *http.Request) {
 		//
 	}
 	fmt.Println(result.ModifiedCount)
-	jsonResponse, err := json.Marshal("Upvote Successful")
+	jsonResponse, err := json.Marshal("Upvote Question Successful")
 	if err != nil {
 		return
 	}
@@ -219,7 +219,7 @@ func DownvoteQuestion(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	fmt.Println(result.ModifiedCount)
-	jsonResponse, err := json.Marshal("Downvote Successful")
+	jsonResponse, err := json.Marshal("Downvote Question Successful")
 	if err != nil {
 		return
 	}
