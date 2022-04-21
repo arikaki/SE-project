@@ -16,5 +16,7 @@ describe('The Home Page', () => {
     it("routes to a correct pages", () => {
       cy.contains("Answers").click();
       cy.url().should("include", "answers");
+      cy.contains("Categories").click();
+      cy.url().should("include", "Categories");
     });
   })
