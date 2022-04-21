@@ -67,16 +67,11 @@ function Post({ post }) {
   return (
     <div className="post">
       <div className="post__info">
-        <Avatar src={post?.user?.photo} />
-        <h4>{post?.user?.userName}</h4>
-
-        <small>
-          <LastSeen date={post?.createdAt} />
-        </small>
+        <h4>{post?.Username}</h4>
       </div>
       <div className="post__body">
         <div className="post__question">
-          <p>{post?.questionName}</p>
+          <p>{post?.Question}</p>
           <button
             onClick={() => {
               setIsModalOpen(true);
@@ -138,66 +133,6 @@ function Post({ post }) {
           <ShareOutlined />
           <MoreHorizOutlined />
         </div>
-      </div>
-      <p
-        style={{
-          color: "rgba(0,0,0,0.5)",
-          fontSize: "12px",
-          fontWeight: "bold",
-          margin: "10px 0",
-        }}
-      >
-        {post?.allAnswers.length} Answer(s)
-      </p>
-
-      <div
-        style={{
-          margin: "5px 0px 0px 0px ",
-          padding: "5px 0px 0px 20px",
-          borderTop: "1px solid lightgray",
-        }}
-        className="post__answer"
-      >
-        {post?.allAnswers?.map((_a) => (
-          <>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                padding: "10px 5px",
-                borderTop: "1px solid lightgray",
-              }}
-              className="post-answer-container"
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "10px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  color: "#888",
-                }}
-                className="post-answered"
-              >
-                <Avatar src={_a?.user?.photo} />
-                <div
-                  style={{
-                    margin: "0px 10px",
-                  }}
-                  className="post-info"
-                >
-                  <p>{_a?.user?.userName}</p>
-                  <span>
-                    <LastSeen date={_a?.createdAt} />
-                  </span>
-                </div>
-              </div>
-              <div className="post-answer">{ReactHtmlParser(_a?.answer)}</div>
-            </div>
-          </>
-        ))}
       </div>
     </div>
   );

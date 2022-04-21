@@ -15,10 +15,12 @@ import Answer from "./components/Answer";
 function App() {
   const user = useSelector(selectUser);
   const [showFade, setShowFade] = useState(false);
-  const [newUser, setNewuser] = useState(false);
+  const [newUser, setNewuser] = useState(localStorage.getItem('NewUser') == "true");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
+    setIsLoggedIn(localStorage.getItem('Login') == 'true');
     onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         dispatch(
@@ -34,15 +36,16 @@ function App() {
     });
   }, [dispatch]);
 
-  if (!user) {
-    return <Login setNewuser={setNewuser}/>;
+
+  if (!isLoggedIn) {
+    return <Login setIsLoggedIn={setIsLoggedIn} setNewuser={setNewuser}/>;
   } else
   if (newUser) {
     return <NewCategories setNewuser={setNewuser}/>
   } else {
     return (
       <div className="App">
-        <QuoraHeader setShowFade={setShowFade} />
+        <QuoraHeader setIsLoggedIn={setIsLoggedIn} setShowFade={setShowFade} />
         <Routes>
           <Route
             exact

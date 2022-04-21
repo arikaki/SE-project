@@ -37,6 +37,7 @@ type Post struct {
 	Upvotes    int    `json:"Upvotes"`
 	Downvotes  int    `json:"Downvotes"`
 	Topic      string `json:"Topic"`
+	Username   string `json:"Username"`
 }
 
 func getQuestionCollection() *mongo.Collection {
@@ -58,13 +59,12 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user := r.Context().Value(0).(*User)
-	fmt.Println("logged user from middleware", user)
 
 	collection := getQuestionCollection()
 
 	questionBson := BsonQuestion(post.Question, []primitive.ObjectID{}, user.Username, post.Downvotes, post.Upvotes, post.Topic, false, 0)
-	// insertResult, err := collection.InsertOne(context.TODO(), harshwardhan)
 	insertResult, err := collection.InsertOne(context.TODO(), questionBson)
+	_ = insertResult
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -72,7 +72,6 @@ func AskQ(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	fmt.Println("Inserted document: ", insertResult.InsertedID)
 	w.Write(jsonResponse)
 
 }
@@ -99,17 +98,12 @@ func GetAllQ(w http.ResponseWriter, r *http.Request) {
 		// return allQuestions, err
 	}
 
-	// once exhausted, close the cursor
 	result.Close(context.TODO())
-
-	if len(allQuestions) == 0 {
-		fmt.Println("return", allQuestions)
-		// return allQuestions, mongo.ErrNoDocuments
+	jsonResponse, err1 := json.Marshal(allQuestions)
+	if err1 != nil {
+		return
 	}
-
-	// return tasks, nil
-
-	fmt.Println("Fetched Question", allQuestions)
+	w.Write(jsonResponse)
 }
 
 func FindMatchingQuestions(w http.ResponseWriter, r *http.Request) {

@@ -1,14 +1,10 @@
-import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../feature/userSlice";
-// import "./css/QuoraBox.css";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import Zoom from "@material-ui/core/Zoom";
 import axios from "axios";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Dropdown from "react-bootstrap/Dropdown";
 
 function QuoraBox(props) {
   const [isExpanded, setExpanded] = useState(false);
@@ -107,6 +103,7 @@ function QuoraBox(props) {
               margin: "5px",
             }}
           >
+            <option selected>Choose...</option>
             <option value="Science">Science</option>
             <option value="Music">Music</option>
             <option value="Technology">Technology</option>
@@ -139,12 +136,14 @@ function QuoraBox(props) {
         )}
 
         <textarea
+          id = "333"
           name="content"
           onClick={expand}
           onChange={handleChange}
           value={note.content}
           placeholder="Post a Question..."
           rows={isExpanded ? 3 : 1}
+          
         />
         <Zoom in={isExpanded}>
           <Fab onClick={submitNote}>
