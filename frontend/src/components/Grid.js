@@ -6,11 +6,17 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import './css/Grid.css';
+import axios from 'axios';
 import categories from './Category';
+import { useNavigate } from "react-router-dom";
 
 function Grid(props) {
-  var buttons = [];
+  let navigate = useNavigate();
   const [selected, setSelected] = React.useState([]);
+
+  React.useEffect(() => {
+    props.selected && setSelected(props.selected);
+  }, [props.selected])
 
   const handleClick = (item) => {
     let selectedCopy;
@@ -25,8 +31,29 @@ function Grid(props) {
     setSelected(selectedCopy)
   };
 
+  const onCategorySubmit = () => {
+
+    axios.post('http://localhost:8000/api/user/setUserCategory', {
+      Topic: selected
+    }, {
+      "withCredentials": true,
+      "Access-control-Allow-Origin": "http://localhost:8000"
+    })
+      .then((response) => {
+        if (props.notRegister) {
+          navigate("/");
+        } else {
+          props.setNewuser(false);
+          localStorage.setItem('NewUser', false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
-    <div className="container">
+    <div className="container1">
       {categories.map((item) => {
         return (<Card className='card-icon' onClick={() => handleClick(item)}>
           <CardActionArea>
@@ -34,7 +61,7 @@ function Grid(props) {
               component="img"
               height="130"
               image={`/images/${item}.jpeg`}
-              // alt="green iguana"
+            // alt="green iguana"
             />
             <CardContent className={`${selected.indexOf(item) >= 0 ? ' selected' : ''}`}>
               <Typography gutterBottom variant="h6" component="div">
@@ -44,7 +71,7 @@ function Grid(props) {
           </CardActionArea>
         </Card>)
       })}
-      <button className="card-icon sample" variant="contained" disabled={selected.length < 5} onClick={() => props.setNewuser(false)}>
+      <button className="card-icon sample" variant="contained" disabled={selected.length < 5} onClick={onCategorySubmit}>
         Continue
       </button>
     </div>

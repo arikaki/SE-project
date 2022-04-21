@@ -30,8 +30,9 @@ function QuoraHeader(props) {
     if (window.confirm("Are you sure to logout ?")) {
       signOut(auth)
         .then(() => {
+          localStorage.setItem('Login', false);
+          props.setIsLoggedIn(false);
           dispatch(logout());
-          console.log("Logged out");
         })
         .catch(() => {
           console.log("error in logout");
@@ -62,9 +63,9 @@ function QuoraHeader(props) {
                 Answers
               </Nav.Link>
 
-              <Nav.Link href="/">
+              <Nav.Link href="/categories">
                 <NotificationsOutlined />
-                Notifications
+                Categories
               </Nav.Link>
             </Nav>
 

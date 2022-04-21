@@ -79,3 +79,47 @@ func AddAnswer(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonResponse)
 
 }
+func UpvoteAnswer(w http.ResponseWriter, r *http.Request) {
+	collection := getAnswerCollection()
+	var data selectedAnswer
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"answer", data.Answer}}
+	update := bson.D{{"$inc", bson.D{{"upvotes", 1}}}}
+	result, err1 := collection.UpdateOne(context.Background(), filter, update)
+	if err1 != nil {
+		//
+	}
+	fmt.Println(result.ModifiedCount)
+	jsonResponse, err := json.Marshal("Upvote Answer Successful")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
+
+}
+func DownvoteAnswer(w http.ResponseWriter, r *http.Request) {
+	collection := getAnswerCollection()
+	var data selectedAnswer
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	filter := bson.D{{"answer", data.Answer}}
+	update := bson.D{{"$inc", bson.D{{"downvotes", -1}}}}
+	result, err1 := collection.UpdateOne(context.Background(), filter, update)
+	if err1 != nil {
+		//
+	}
+	fmt.Println(result.ModifiedCount)
+	jsonResponse, err := json.Marshal("Downvote Answer Successful")
+	if err != nil {
+		return
+	}
+	w.Write(jsonResponse)
+
+}

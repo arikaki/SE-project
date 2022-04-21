@@ -3,6 +3,7 @@ import "./Login.css";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../firebase";
 import axios from "axios";
+import logo1 from "../images/kora1.png";
 
 function Login(props) {
   const handleSubmit = async () => {
@@ -18,7 +19,10 @@ function Login(props) {
             "withCredentials": true,
             "Access-control-Allow-Origin": "http://localhost:8000"
           })
-            .then((response) => console.log("response", response))
+            .then((response) => {
+              localStorage.setItem('Login', true);
+              props.setIsLoggedIn(true);
+            })
             .catch((error) => {
               console.log(error);
             });
@@ -33,7 +37,12 @@ function Login(props) {
             "withCredentials": true,
             "Access-control-Allow-Origin": "http://localhost:8000"
           })
-            .then((response) => props.setNewuser(true))
+            .then((response) => {
+              localStorage.setItem('Login', true);
+              props.setIsLoggedIn(true);
+              props.setNewuser(true);
+              localStorage.setItem('NewUser', true);
+            })
             .catch((error) => {
               console.log(error);
             });
@@ -44,6 +53,15 @@ function Login(props) {
   return (
     <div className="login-container">
       <div className="login-content">
+      <img
+          src={logo1}
+          alt="logo"
+          style={{
+            borderRadius: "20px",
+            width: "500px",
+            marginBottom: "-20px",
+          }}
+        />
         <button onClick={handleSubmit} className="btn-login">
           Login to continue
         </button>
