@@ -1,0 +1,25 @@
+.selected{
+  background-color: darkgray;
+}
+.text1{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+  padding: 30px 30px 0px 30px;
+  font-size: 50px;
+}
+.text2{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+  padding: 5px 30px 0px 30px;
+  font-size: 20px;
+}
+.categories{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}

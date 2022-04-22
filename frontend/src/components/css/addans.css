@@ -1,0 +1,81 @@
+.note{  background: #fff;
+  border-radius: 7px;
+  box-shadow: 0 2px 5px #ccc;
+  padding: 10px;
+  width: 40.625rem;
+  margin-top: 20px;
+  margin-left: 3.125rem;
+  float: left;
+
+}
+.note h1 {
+  font-size: 1.1em;
+  margin-bottom: 6px;
+}
+.note p {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.note .voteup{
+  position:relative;
+  /* float: left; */
+  top:70px;
+  display:inline;
+  margin-right: 10px;
+  margin-bottom: 0px;
+  color: #00008B;
+  border: none;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  outline: none;
+}
+.note .votedown{
+  position:relative;
+  /* float: left; */
+
+  left:60px;
+  top:10px;
+  display:inline;
+  color: #00008B;
+  border: none;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  outline: none;
+}
+
+.note .count{
+  position: relative;
+  left:35px;
+  top:45px;
+}
+
+.note .report{
+  position:relative;
+  /* float: left; */
+
+  left:85px;
+  top:10px;
+  display:inline;
+  color: #00008B;
+  border: none;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  outline: none;
+}
+.note .delete {
+  position: relative;
+  float: right;
+  margin-right: 10px;
+  color: #00008B;
+  border: none;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  outline: none;
+}

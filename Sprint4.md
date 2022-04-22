@@ -149,24 +149,19 @@ Run the below commands to start the cypress testing.
 > `npx cypress open`
 
 ### Option to choose topics dropdown
-![dropdown](https://user-images.githubusercontent.com/78468475/164371345-f5996bb9-1a6c-46d7-b827-984deb79408b.PNG)
 
 ### Login page 
-![firebase](https://user-images.githubusercontent.com/78468475/164371356-0eee5006-07bb-4b37-b4be-f0f4c57c8046.jpeg)
 
 ### Category page (selection atleast 5)
-![category](https://user-images.githubusercontent.com/78468475/164371402-4a3c7e1d-d86e-44c7-a243-5fd8baca9fe7.png)
 
 ### Answer page 
-![anwer](https://user-images.githubusercontent.com/78468475/164371417-4dec90da-fc70-466e-9ae9-deb2d2ade7c5.jpeg)
 
 ### Profile page
-![profile](https://user-images.githubusercontent.com/78468475/164371422-c9e717e8-559f-448e-bc7b-05d8eae4884c.jpeg)
+
 
 ## Cypress testing video
 
 
-https://user-images.githubusercontent.com/78468475/164369993-2f8a3b84-83ff-4628-9435-f99879ce4eb7.mp4
 
 
 ## Frontend
