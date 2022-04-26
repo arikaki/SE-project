@@ -31,6 +31,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 | Lokesh Meesala       | lokim99        |    Frontend(Sprint1) and backend for rest |
 | Nikhil Annarapu      | Nikhil1612     |    Frontend                               |
 
+
+## Master branch is for every sprint result delivery
+## Main branch is for final product delivery
+
 In the project directory, you can run:
 
 ### `npm start`
